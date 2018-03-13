@@ -13,7 +13,7 @@ import * as pattern from 'patternomaly';
 export class DashboardComponent implements OnInit  {
 
   //-- ATTRIBUTS
-  Employe = {id : null,agence: {codeAgence:0}};
+  Employe = {codePersonne : null,agence: {codeAgence:0}};
   VersementNumber = 0;
   RetraitNumber = 0;
   VirementNumber = 0;
@@ -28,136 +28,7 @@ export class DashboardComponent implements OnInit  {
   //-- CONSTRUCTOR && INJECTING SERVICES 
   constructor(private authService: AuthenticateService,private dashService : DashboardService){
         
-      //--  RELODING SCRIPTS TO AVOID DOM HIERACHY CONFUSING 
-      if(document.getElementById("jqueryScript")){
-        document.getElementById("jqueryScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "jqueryScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/jquery/jquery.min.js");
-        document.body.appendChild(testScript);  
-      }
-      
-      if(document.getElementById("jqueryuiScript")){
-        document.getElementById("jqueryuiScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "jqueryuiScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/jquery/jquery-ui.min.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("plugin")){
-        document.getElementById("plugin").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "plugin");
-        testScript.setAttribute("src", "../../../assets/js/plugins.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("plugin")){
-        document.getElementById("plugin").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "plugin");
-        testScript.setAttribute("src", "../../../assets/js/plugins.js");
-        document.body.appendChild(testScript);
-      }
-
-        
-      if(document.getElementById("bootstrapScript")){
-          document.getElementById("bootstrapScript").remove();
-          var testScript = document.createElement("script");
-          testScript.setAttribute("id", "bootstrapScript");
-          testScript.setAttribute("src", "../../../assets/js/plugins/bootstrap/bootstrap.min.js");
-          document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("iCheckScript")){
-            document.getElementById("iCheckScript").remove();
-            var testScript = document.createElement("script");
-            testScript.setAttribute("id", "iCheckScript");
-            testScript.setAttribute("src", "../../../assets/js/plugins/icheck/icheck.min.js");
-            document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("custScript")){
-        document.getElementById("custScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "custScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("scrollScript")){
-        document.getElementById("scrollScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "scrollScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
-        document.body.appendChild(testScript);        
-      }
-
-      if(document.getElementById("rickshawScript")){
-        document.getElementById("rickshawScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "rickshawScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/rickshaw/d3.v3.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("rickshawMinScript")){
-        document.getElementById("rickshawMinScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "rickshawMinScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/rickshaw/rickshaw.min.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("bootdatScript")){
-        document.getElementById("bootdatScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "bootdatScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("carouselScript")){
-        document.getElementById("carouselScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "carouselScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/owl/owl.carousel.min.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("momentScript")){
-        document.getElementById("momentScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "momentScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/moment.min.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("daterangerScript")){
-        document.getElementById("daterangerScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "daterangerScript");
-        testScript.setAttribute("src", "../../../assets/js/plugins/daterangepicker/daterangepicker.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("actionScript")){
-        document.getElementById("actionScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "actionScript");
-        testScript.setAttribute("src", "../../../assets/js/actions.js");
-        document.body.appendChild(testScript);
-      }
-
-      if(document.getElementById("dashboardScript")){
-        document.getElementById("dashboardScript").remove();
-        var testScript = document.createElement("script");
-        testScript.setAttribute("id", "dashboardScript");
-        testScript.setAttribute("src", "../../../assets/js/demo_dashboard.js");
-        document.body.appendChild(testScript);
-      }
-      //-- END  RELODING SCRIPTS TO AVOID DOM HIERACHY CONFUSING 
+   
   }
   //-- END CONSTRUCTOR && INJECTING SERVICES 
 
@@ -165,7 +36,9 @@ export class DashboardComponent implements OnInit  {
 
   //-- INITIALIZING FUNCTIONS
   ngOnInit() {
-          this.authService.getUserInfo$(sessionStorage.getItem("idUser")).subscribe(
+    this.authService.getUsernameInfo$().subscribe(
+        res => {
+          this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
                   this.GetCountVersementByEmp();
@@ -176,12 +49,13 @@ export class DashboardComponent implements OnInit  {
                   this.GeClientStatisByAgence();
               }
           );
+        });
   }
   //-- END INITIALIZING FUNCTIONS
 
   //-- GETTING PAYMENT BY EMPLOYE
   GetCountVersementByEmp(){
-    this.dashService.GetCountVersementByEmploye(this.Employe.id).subscribe(
+    this.dashService.GetCountVersementByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.VersementNumber = data;
@@ -192,7 +66,7 @@ export class DashboardComponent implements OnInit  {
 
   //-- GETTING COUNT WITHDRAWAL BY EMPLOYE
   GetCountRertraitByEmp(){
-    this.dashService.GetCountRetraitByEmploye(this.Employe.id).subscribe(
+    this.dashService.GetCountRetraitByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.RetraitNumber = data;
@@ -203,7 +77,7 @@ export class DashboardComponent implements OnInit  {
 
   //-- GETTING COUNT TRANSFER BY EMPLOYE
   GetCountVirementByEmp(){
-    this.dashService.GetCountVirementByEmploye(this.Employe.id).subscribe(
+    this.dashService.GetCountVirementByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.VirementNumber = data;
@@ -216,7 +90,7 @@ export class DashboardComponent implements OnInit  {
   GetOperationsByEmp(){
     let i;
     //-- CONSUMING REST API SERVICE TO GET OPERATIONS
-    this.dashService.GetOperationsByEmploye(this.Employe.id).subscribe(
+    this.dashService.GetOperationsByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.operations = data;

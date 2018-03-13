@@ -14,31 +14,31 @@ export class OperationService {
     constructor(private http: HttpClient,private jwtHelper: JwtHelper){}
 
     Versement(code,montant,codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/Verser/`+code+'/'+montant+'/'+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/Verser/`+code+'/'+montant+'/'+codeEmp)
       }
 
     Retrait(code,montant,codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/Retier/`+code+'/'+montant+'/'+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/Retier/`+code+'/'+montant+'/'+codeEmp)
       }
 
     Virement(cp1,cp2,montant,codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/Virement/`+cp1+'/'+cp2+'/'+montant+'/'+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/Virement/`+cp1+'/'+cp2+'/'+montant+'/'+codeEmp)
       }
 
       GetCountOperationsByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetCountOperationsByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetCountOperationsByEmploye/`+codeEmp)
       }
 
       GetCountTransferByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetCountTransferByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetCountTransferByEmploye/`+codeEmp)
       }
 
       GetLatestTransferByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetLatestTransactionByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetLatestTransactionByEmploye/`+codeEmp)
       }
 
       GetActiveAccount() {
-        return this.authGet$(`https://localhost:44315/api/GetCountActiveAccount`)
+        return this.authGet$(`http://localhost:44365/api/GetCountActiveAccount`)
       }
 
 

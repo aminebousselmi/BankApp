@@ -23,7 +23,7 @@ export class OperationComponent {
   countTransfer = null;
   LatestTransfer = null;
   ActiveAccount = null;
-  Employe : {id : null};
+  Employe : {codePersonne : null};
   amountV = 0;
   amountR = 0;
   amountVI = 0;
@@ -40,7 +40,7 @@ export class OperationComponent {
     private modal: Modal
     
   ) {
-    
+     
     this.toastr.setRootViewContainerRef(vcr);
   }
   //-- END CONSTRUCTOR
@@ -48,7 +48,9 @@ export class OperationComponent {
   //-- METHODES
 
   ngOnInit() {
-          this.authService.getUserInfo$(sessionStorage.getItem("idUser")).subscribe(
+    this.authService.getUsernameInfo$().subscribe(
+        res => {
+          this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
                   this.GetCountOperationsByEmp();
@@ -56,6 +58,7 @@ export class OperationComponent {
                   this.GetLatestTransferByEmp();
               }
           );
+        });   
         this.GetActiveAcc();  
 }
 
@@ -89,7 +92,7 @@ export class OperationComponent {
     `)
     .open().result.then((dialog: any) => 
     { 
-      this.operationService.Versement(this.compte.codeCompte,amount,this.Employe.id).subscribe(
+      this.operationService.Versement(this.compte.codeCompte,amount,this.Employe.codePersonne).subscribe(
         data =>{
           if(data.numeroOperation == 0){
               this.showErrorO(data.messageResult);
@@ -119,7 +122,7 @@ export class OperationComponent {
     `)
     .open().result.then((dialog: any) => 
     { 
-      this.operationService.Retrait(this.compte.codeCompte,amount,this.Employe.id).subscribe(
+      this.operationService.Retrait(this.compte.codeCompte,amount,this.Employe.codePersonne).subscribe(
         data =>{
           if(data.numeroOperation == 0){
             this.showErrorO(data.messageResult);
@@ -148,7 +151,7 @@ export class OperationComponent {
     `)
     .open().result.then((dialog: any) => 
     { 
-      this.operationService.Virement(this.compte.codeCompte,compte2,amount,this.Employe.id).subscribe(
+      this.operationService.Virement(this.compte.codeCompte,compte2,amount,this.Employe.codePersonne).subscribe(
         data =>{
           if(data.numeroOperation == 0 || compte2 == null){
             this.showErrorO(data.messageResult);
@@ -166,7 +169,7 @@ export class OperationComponent {
   }
 
   GetCountOperationsByEmp(){
-    this.operationService.GetCountOperationsByEmploye(this.Employe.id).subscribe(
+    this.operationService.GetCountOperationsByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.countOperations = data;
@@ -175,7 +178,7 @@ export class OperationComponent {
   }
 
   GetCountTransferByEmp(){
-    this.operationService.GetCountTransferByEmploye(this.Employe.id).subscribe(
+    this.operationService.GetCountTransferByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.countTransfer = data;
@@ -184,7 +187,7 @@ export class OperationComponent {
   }
 
   GetLatestTransferByEmp(){
-    this.operationService.GetLatestTransferByEmploye(this.Employe.id).subscribe(
+    this.operationService.GetLatestTransferByEmploye(this.Employe.codePersonne).subscribe(
         data => 
         {
           this.LatestTransfer = data;

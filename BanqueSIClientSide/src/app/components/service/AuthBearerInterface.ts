@@ -1,5 +1,5 @@
 export interface AuthBearer{
-    auth_token:string;
-    id:string;
-    expires_in:number;
+    state : number;
+    msg : string;
+    data : any;
 }

@@ -15,7 +15,7 @@ export class CompteService {
     }
 
     getCompteByNumber(numberACC) {
-        return this.authGet$(`https://localhost:44315/api/GetCompte/`+numberACC)
+        return this.authGet$(`http://localhost:44365/api/GetCompte/`+numberACC)
     }
 
     //-- SECURING API DATA

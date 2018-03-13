@@ -16,27 +16,27 @@ export class DashboardService {
     }
 
     GetCountVersementByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetCountVersementByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetCountVersementByEmploye/`+codeEmp)
       }
 
       GetCountRetraitByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetCountRetraitByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetCountRetraitByEmploye/`+codeEmp)
       }
 
       GetCountVirementByEmploye(codeEmp) {
-        return this.authGet$(`https://localhost:44315/api/GetCountTransferByEmploye/`+codeEmp)
+        return this.authGet$(`http://localhost:44365/api/GetCountTransferByEmploye/`+codeEmp)
       }
 
       GetOperationsByEmploye(codeEmploye) {
-        return this.authGet$(`https://localhost:44315/api/GetOperationsByEmploye/`+codeEmploye)
+        return this.authGet$(`http://localhost:44365/api/GetOperationsByEmploye/`+codeEmploye)
       }
 
       GetCountCustomerByAgency(codeAgence) {
-        return this.authGet$(`https://localhost:44315/api/GetCountClientByAgence/`+codeAgence)
+        return this.authGet$(`http://localhost:44365/api/GetCountClientByAgence/`+codeAgence)
       }
 
       GetCountAccountByAgency(codeAgence) {
-        return this.authGet$(`https://localhost:44315/api/GetCountAccountByAgency/`+codeAgence)
+        return this.authGet$(`http://localhost:44365/api/GetCountAccountByAgency/`+codeAgence)
       }
 
       //-- SECURING API DATA

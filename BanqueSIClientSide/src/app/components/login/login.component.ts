@@ -21,6 +21,8 @@ export class LoginComponent implements OnDestroy {
     //-- CONSTRUCTOR && INJECTING SERVICES 
     constructor(private authenticateService: AuthenticateService, private router:Router,private toastr: ToastsManager,private vcr: ViewContainerRef) 
     {
+    
+  
         this.toastr.setRootViewContainerRef(vcr);
     }
     //-- END CONSTRUCTOR && INJECTING SERVICES 
@@ -33,14 +35,15 @@ export class LoginComponent implements OnDestroy {
 
         this.postStream$ = this.authenticateService.login$(this.userName,this.password).subscribe(
             result => {
-                if (result == undefined) {
-                    this.showError("Email or Password Invalid");
+                if (result.state == 1) {
+                    this.showValid(result.msg);
+                    window.location.reload();
+            
                 } else {
-                    this.showValid("Authentication Success");
+                    this.showError(result.msg);
                 }
             }
         )
-        
     }
     //-- END LOGIN FUNCTION
     

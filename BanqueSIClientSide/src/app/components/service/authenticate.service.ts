@@ -19,7 +19,6 @@ export class AuthenticateService implements CanActivate {
 
             return true;
         } else {
-            console.log("oke 2 ");
             this.router.navigate(['']);
             return false;
         }
@@ -28,16 +27,18 @@ export class AuthenticateService implements CanActivate {
 
     public login$(userName: string, password: string) {
         let header = new HttpHeaders().set('Content-Type', 'application/json');
-        let body = JSON.stringify({ "Email": userName, "Password": password });
+        let body = JSON.stringify({ "username": userName, "password": password });
         let options = { headers: header };
-        return this.http.post<AuthBearer>("https://localhost:44315/login", body, options).pipe(
+        return this.http.put<AuthBearer>("http://localhost:44365/Login", body, options).pipe(
             debounceTime(200),
             distinctUntilChanged(),
             map(
                 res => {
                     let result = res;
-                    sessionStorage.setItem(this.tokeyKey, result.auth_token);
-                    sessionStorage.setItem("idUser", result.id);
+                    
+                    if (result.state && result.state == 1 && result.data && result.data.accessToken) {
+                        sessionStorage.setItem(this.tokeyKey, result.data.accessToken);
+                    }
                     this.router.navigate(["stb/dashboard"]);
                     return result;
                 }
@@ -63,8 +64,12 @@ export class AuthenticateService implements CanActivate {
         return !this.jwtHelper.isTokenExpired(token)
     }
 
-    public getUserInfo$(id){
-        return this.authGet$("https://localhost:44315/api/userInfo/"+id);
+    public getUsernameInfo$() {
+        return this.authGet$("http://localhost:44365/api/username");
+    }
+
+    public getUserInfo$(username){
+        return this.authGet$("http://localhost:44365/api/userInfo/"+username);
     }
 
     public authPost$(url: string, body: any) {

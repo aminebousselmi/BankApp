@@ -15,17 +15,21 @@ export class NavbarComponent implements OnInit {
 
   //-- CONSTRUCTOR && INJECTING SERVICES 
   constructor (private authService: AuthenticateService,private router : Router){
-    
+  
+  
   }
   //-- END CONSTRUCTOR && INJECTING SERVICES 
 
   //-- INITIALIZING EMPLOYE DATA
   ngOnInit() {
-          this.authService.getUserInfo$(sessionStorage.getItem("idUser")).subscribe(
+    this.authService.getUsernameInfo$().subscribe(
+        res => {
+          this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
               }
           );
+        });
   }
   //-- END INITIALIZING EMPLOYE DATA
 
@@ -33,6 +37,10 @@ export class NavbarComponent implements OnInit {
   public logout(){
     sessionStorage.clear();
     this.router.navigate([""]);
+  }
+
+  public reload(){
+    window.location.reload();
   }
   //-- END LOGOUT FUNCTION
 }
