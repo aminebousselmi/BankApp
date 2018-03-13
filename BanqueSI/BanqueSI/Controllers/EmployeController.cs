@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using BanqueSI.Model.Entities;
 using BanqueSI.Repository.IRepository;
@@ -12,7 +14,7 @@ using Microsoft.AspNetCore.Server.HttpSys;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     public class EmployeController : Controller
     {
         //-- DBContext // ATTRIBUTS
@@ -22,6 +24,7 @@ namespace BanqueSI.Controllers
         //-- CONSTRUCTOR
         public EmployeController(IEmployeRepository _employeRepository)
         {
+
             this._employeRepository = _employeRepository;
         }
         //-- END CONSTRUCTOR
@@ -35,14 +38,16 @@ namespace BanqueSI.Controllers
             return e;
         }
         //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
-        [HttpGet("api/userInfo/{id}")]
-        public Employe GetEmployeByUsername(String id)
+        [HttpGet("api/userInfo/{username}")]
+        public Employe GetEmployeByUsername(String username)
         {
-            return _employeRepository.GetEmployeById(id);
+            return _employeRepository.GetEmployeByUsername(username);
         }
 
         //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetEmployes")]
         public List<Employe> ListEmployes()

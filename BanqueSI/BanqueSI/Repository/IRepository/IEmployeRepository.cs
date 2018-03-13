@@ -10,7 +10,7 @@ namespace BanqueSI.Repository.IRepository
     {
         Personne SaveEmploye(Employe e);
         List<Employe> ListEmploye();
-        Employe GetEmployeById(String id);
+        Employe GetEmployeByUsername(String username);
         void Save();
     }
 }

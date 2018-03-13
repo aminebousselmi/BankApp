@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
 
 namespace BanqueSI.Repository
 {
@@ -17,13 +16,11 @@ namespace BanqueSI.Repository
         //-- ATTRIBUTS
         private STBDbContext _context;
         private bool disposed = false;
-        private UserManager<Personne> _userManager;
         //-- END ATTRIBUTS
 
         //-- CONSTRUCTOR
-        public EmployeRepository(STBDbContext _context,UserManager<Personne> _userManager)
+        public EmployeRepository(STBDbContext _context)
         {
-            this._userManager = _userManager;
             this._context = _context;
         }
         //--END CONSTRUCTOR
@@ -31,12 +28,12 @@ namespace BanqueSI.Repository
         //-- METHODES
 
         //-- GET EMPLOYE BY USERNAME
-        public Employe GetEmployeById(String id)
+        public Employe GetEmployeByUsername(String username)
         {
 
             return _context.Personnes.OfType<Employe>()
-                        .Include(b => b.agence)
-                        .Single(b => b.Id == id);
+                        .Include(b => b.Agence)
+                        .Single(b => b.Username == username);
 
         }
         //-- END GET EMPLOYE BY USERNAME
@@ -49,6 +46,10 @@ namespace BanqueSI.Repository
 
         public Personne SaveEmploye(Employe e)
         {
+            var sha1 = new SHA1CryptoServiceProvider();
+            var data = Encoding.ASCII.GetBytes(e.Password);
+            var sha1data = sha1.ComputeHash(data);
+            e.Password = Convert.ToBase64String(sha1data);
             _context.Employes.Add(e);
             Save();
             return e;

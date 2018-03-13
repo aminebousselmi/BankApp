@@ -29,7 +29,7 @@ namespace BanqueSI.Repository
             return _context
                     .Personnes
                     .OfType<Client>()
-                    .Where(p => p.agence.CodeAgence == idAgence)
+                    .Where(p => p.Agence.CodeAgence == idAgence)
                     .ToList().Count;
         }
 

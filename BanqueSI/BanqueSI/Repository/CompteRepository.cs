@@ -29,7 +29,7 @@ namespace BanqueSI.Repository
         public int GetCountAccountByAgency(int idAgence)
         {
             return _context.Comptes
-                    .Where(b => b.client.agence.CodeAgence == idAgence)
+                    .Where(b => b.client.Agence.CodeAgence == idAgence)
                     .ToList()
                     .Count;
         }
@@ -45,13 +45,10 @@ namespace BanqueSI.Repository
                     throw new NullReferenceException("Account Number empty");
                 }
 
-
                 if (_context.Comptes.Where(b => b.CodeCompte == code).Include(b => b.client).Include(b => b.Operations).FirstOrDefault() == null)
                 {
                     throw new NullReferenceException("Account invalid");
                 }
-
-
                 Compte compte = _context.Comptes
                                   .Where(b => b.CodeCompte == code)
                                   .Include(b => b.client)

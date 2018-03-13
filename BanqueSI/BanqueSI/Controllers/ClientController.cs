@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     public class ClientController : Controller
     {
         //-- DBContext // ATTRIBUTS
@@ -27,6 +27,7 @@ namespace BanqueSI.Controllers
 
         //-- APIS
         //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountClientByAgence/{idAgence}")]
         public int GetCountClientByAgence(int idAgence)

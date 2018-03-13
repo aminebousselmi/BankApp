@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     public class ChangeController : Controller
     {
         //-- DBContext // ATTRIBUTS

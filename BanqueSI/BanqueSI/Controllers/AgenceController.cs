@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     public class AgenceController : Controller
     {
         //-- DBContext // ATTRIBUTS
@@ -30,7 +30,8 @@ namespace BanqueSI.Controllers
 
         // GET
 
-        //-- SECURING API
+        //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetAgence/{id}")]
         public Agence GetAgence(int id)

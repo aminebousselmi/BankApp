@@ -16,7 +16,7 @@ namespace BanqueSI.DTO
         public System.Nullable<Double> Decouvert { get; set; }
         public System.Nullable<Double> Taux { get; set; }
         public CompteType Type { get; set; }
-        public String CodeClient { get; set; }
+        public int CodeClient { get; set; }
         public String NomClient { get; set; }
         public String ResultMessage { get; set; }
 

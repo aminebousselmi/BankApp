@@ -1,143 +1,123 @@
 using System;
+//using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using BanqueSI.Model.Entities;
+using BanqueSI;
+using BanqueSI.Repository.IRepository;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using BanqueSI.DTO;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
-using BanqueSI.Common;
-using Microsoft.Extensions.Options;
-using BanqueSI.Helpers;
-using Newtonsoft.Json;
-using BanqueSI.Model.DTO;
-using MimeKit;
-using MailKit.Net.Smtp;
-
+using System.Text;
+using System.Security.Cryptography;
 
 namespace ASPNETCoreAngularJWT
 {
-    [RequireHttps]
+    //[RequireHttps]
     //-- BUSINESS LOGIC TOKEN AUTH
     public class TokenAuthController : Controller
     {
         //-- DBContext // ATTRIBUTS
         private readonly BanqueSI.Model.STBDbContext dbContext;
-        private readonly UserManager<Personne> _userManager;
-        private readonly IJwtFactory _jwtFactory;
-        private readonly JwtIssuerOptions _jwtOptions;
+        /*private readonly UserManager<Personne> _userManager;
+        private readonly SignInManager<Personne> _signInManager;
+        private readonly IConfiguration _configuration;*/
         //-- END DBContext // ATTRIBUTS
 
         //-- CONSTRUCTOR
         public TokenAuthController(
-                BanqueSI.Model.STBDbContext dbContext,
-                UserManager<Personne> _userManager,
-                 IJwtFactory jwtFactory,
-                 IOptions<JwtIssuerOptions> jwtOptions
-            )
+            BanqueSI.Model.STBDbContext dbContext)
         {
             this.dbContext = dbContext;
-            this._userManager = _userManager;
-            _jwtFactory = jwtFactory;
-            _jwtOptions = jwtOptions.Value;
+            /*_userManager = userManager;
+            _signInManager = signInManager;
+            this._configuration = configuration;*/
         }
         //-- END CONSTRUCTOR
 
-        /*public async  Task ConfirmEmail(string userId, string codeC)
-        {
-            if (userId == null || codeC == null)
-                new OkObjectResult("userid or code null");
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                throw new ApplicationException($"Unable to load user with ID '{userId}'.");
-
-            var result = await _userManager.ConfirmEmailAsync(user, codeC);
-            if (result.Succeeded)
-             new OkObjectResult("Confirmed User") ;
-        }*/
-        // POST api/accounts
-        [HttpPost("api/register")]
-        public async Task<IActionResult> Post([FromBody]Employe model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _userManager.CreateAsync(model, model.PasswordHash);
-            await _userManager.AddToRoleAsync(model, "EMPLOYE");
-            if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
-
-            await dbContext.SaveChangesAsync();
-            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(model);
-            /*var callbackurl = Url.Action(
-               controller: "TokenAuthController",
-               action: "ConfirmEmail",
-               values: new { userId = model.Id, codeC = code},
-               protocol: Request.Scheme);*/
-
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("STBApp", "amine.bousselmi1996@gmail.com"));
-            message.To.Add(new MailboxAddress(model.NomPersonne, model.Email));
-            message.Subject = "Email confirmation";
-            message.Body = new TextPart()
-            {
-                Text = "<br/><br/>We are excited to tell you that your account is" +
-                " successfully created." 
-            };
-            using (var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("amine.bousselmi1996@gmail.com", "Jaimelavie123");
-                client.Send(message);
-                client.Disconnect(true);
-            }
-
-                return new OkObjectResult("Account created");
-        }
         //-- LOGIN API FUNCTION
-        // POST api/auth/login
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] PersonneDTO credentials)
+        [HttpPut("Login")]
+        public IActionResult Login([FromBody]Employe user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var sha1 = new SHA1CryptoServiceProvider();
+            var data = Encoding.ASCII.GetBytes(user.Password);
+            var sha1data = sha1.ComputeHash(data);
+            Employe existUser = dbContext.Employes.FirstOrDefault(u => u.Username == user.Username && u.Password == Convert.ToBase64String(sha1data));
 
-            var identity = await GetClaimsIdentity(credentials.Email, credentials.Password);
-            if (identity == null)
+            if (existUser != null)
             {
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid email or password.", ModelState));
+
+                var requestAt = DateTime.Now;
+                var expiresIn = requestAt + TokenAuthOption.ExpiresSpan;
+                var token = GenerateToken(existUser, expiresIn);
+
+                return Json(new RequestResult
+                {
+                    State = RequestState.Success,
+                    Data = new
+                    {
+                        requertAt = requestAt,
+                        expiresIn = TokenAuthOption.ExpiresSpan.TotalSeconds,
+                        tokeyType = TokenAuthOption.TokenType,
+                        accessToken = token
+                    },
+                    Msg = "Login Successful Welcome"
+                });
             }
-            
-            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.Email, _jwtOptions, new Newtonsoft.Json.JsonSerializerSettings { Formatting = Formatting.Indented });
-            return new OkObjectResult(jwt);
+            else
+            {
+                return Json(new RequestResult
+                {
+                    State = RequestState.Failed,
+                    Msg = "Username or password is invalid"
+                });
+            }
         }
+        //-- END LOGIN API FUNCTION
 
-        private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
+        //-- GENERATING AUTHENTICATION TOKEN
+        private string GenerateToken(Employe user, DateTime expires)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-                return await Task.FromResult<ClaimsIdentity>(null);
+            var handler = new JwtSecurityTokenHandler();
 
-            // get the user to verifty
-            var userToVerify = await _userManager.FindByEmailAsync(email);
+            ClaimsIdentity identity = new ClaimsIdentity(
+                new GenericIdentity(user.Username, "TokenAuth"),
+                new[] { new Claim("ID", user.CodePersonne.ToString())}
+            );
 
-            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
-            System.Diagnostics.Debug.WriteLine("1111111111111" + _userManager.IsInRoleAsync(userToVerify, "EMPLOYE").Result);
-            if (await _userManager.IsInRoleAsync(userToVerify, "EMPLOYE") == false)
+            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
             {
-                return await Task.FromResult<ClaimsIdentity>(null);
-            }
-
-            // check the credentials
-            if (await _userManager.CheckPasswordAsync(userToVerify, password))
-            {
-                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(email, userToVerify.Id));
-            }
-            // Credentials are invalid, or account doesn't exist
-            return await Task.FromResult<ClaimsIdentity>(null);
+                Issuer = TokenAuthOption.Issuer,
+                Audience = TokenAuthOption.Audience,
+                SigningCredentials = TokenAuthOption.SigningCredentials,
+                Subject = identity,
+                Expires = expires
+            });
+            return handler.WriteToken(securityToken);
         }
         //-- END GENERATING AUTHENTICATION TOKEN
+
+        //-- GETTING USER INFORMATION
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("api/username")]
+        public IActionResult GetUserInfo()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            return Json(new RequestResult
+            {
+                State = RequestState.Success,
+                Data = new { UserName = claimsIdentity.Name }
+            });
+        }
+        //-- END GETTING USER INFORMATION
     }
 }
 

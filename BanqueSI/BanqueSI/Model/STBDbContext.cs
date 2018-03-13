@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BanqueSI.Model
 {
-    public class STBDbContext: IdentityDbContext<Personne>
+    public class STBDbContext : DbContext
     {
 
 
@@ -21,16 +21,9 @@ namespace BanqueSI.Model
         public DbSet<Client> Clients { get; set; }
         public DbSet<Operation> Operations { get; set; }
 
-        public STBDbContext(DbContextOptions options) : base(options)
-        {
-            
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         =>
             optionsBuilder
-                
                 .UseSqlServer("Server=AMINE;Database=stb_banque;Trusted_Connection=True");
-        
-
     }
 }

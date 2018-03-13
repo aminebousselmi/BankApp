@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using BanqueSI.Common;
-using BanqueSI.Helpers;
 using BanqueSI.Model;
 using BanqueSI.Model.Entities;
 using BanqueSI.Repository;
 using BanqueSI.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -29,9 +24,6 @@ namespace BanqueSI
 {
     public class Startup
     {
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -51,101 +43,88 @@ namespace BanqueSI
             services.AddTransient<IOperationRepository, OperationRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IPersonneRepository, PersonneRepository>();
-            services.AddIdentity<Personne, IdentityRole>()
+            /*services.AddIdentity<Personne, IdentityRole>()
                 .AddEntityFrameworkStores<STBDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders();*/
 
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            // jwt wire up
-            // Get options from app settings
-            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
 
-            // Configure JwtIssuerOptions
-            services.Configure<JwtIssuerOptions>(options =>
+            // Enable the use of an  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]   attribute on methods and classes to protect.
+            services.AddAuthentication().AddJwtBearer(cfg =>
             {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+
+                cfg.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = TokenAuthOption.Key,
+                    ValidAudience = TokenAuthOption.Audience,
+                    ValidIssuer = TokenAuthOption.Issuer,
+                    // When receiving a token, check that we've signed it.
+                    ValidateIssuerSigningKey = true,
+                    // When receiving a token, check that it is still valid.
+                    ValidateLifetime = true,
+                    // This defines the maximum allowable clock skew - i.e. provides a tolerance on the token expiry time 
+                    // when validating the lifetime. As we're creating the tokens locally and validating them on the same 
+                    // machines which should have synchronised time, this can be set to zero. and default value will be 5minutes
+                    ClockSkew = TimeSpan.FromMinutes(0)
+                };
+
             });
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
-                ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
-
-                RequireExpirationTime = false,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(configureOptions =>
-            {
-                configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                configureOptions.TokenValidationParameters = tokenValidationParameters;
-                configureOptions.SaveToken = true;
-            });
-            // add identity
-            var builder = services.AddIdentityCore<Personne>(o =>
-            {
-                // configure identity options
-                o.Password.RequireDigit = true;
-                o.Password.RequireLowercase = true;
-                o.Password.RequireUppercase = true;
-                o.Password.RequireNonAlphanumeric = true;
-                o.Password.RequiredLength = 6;
-            });
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-            builder.AddEntityFrameworkStores<STBDbContext>().AddDefaultTokenProviders();
             services.AddMvc();
             services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseExceptionHandler(
-          builder =>
-          {
-              builder.Run(
-                        async context =>
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            app.UseExceptionHandler(appBuilder =>
+            {
+                appBuilder.Use(async (context, next) =>
+                {
+                    var error = context.Features[typeof(Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature)] as Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature;
 
-                            var error = context.Features.Get<IExceptionHandlerFeature>();
-                            if (error != null)
-                            {
-                                await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
-                            }
-                        });
-          });
+                    //when authorization has failed, should retrun a json message to client
+                    if (error != null && error.Error is SecurityTokenExpiredException)
+                    {
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new RequestResult
+                        {
+                            State = RequestState.NotAuth,
+                            Msg = "token expired"
+                        }));
+                    }
+                    //when orther error, retrun a error message json to client
+                    else if (error != null && error.Error != null)
+                    {
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new RequestResult
+                        {
+                            State = RequestState.Failed,
+                            Msg = error.Error.Message
+                        }));
+                    }
+                    //when no error, do next.
+                    else await next();
+                });
+            });
 
             app.UseAuthentication();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
+    
 
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
                                 .AllowAnyMethod()
                                 .AllowAnyHeader());
             app.UseMvc();
 
-             Seed.CreateRoles(serviceProvider,Configuration).Wait();
+            //Initializer.initial(roleManager).Wait();
         }
     }
 }

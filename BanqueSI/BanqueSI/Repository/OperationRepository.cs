@@ -27,10 +27,10 @@ namespace BanqueSI.Repository
         //-- METHODES
 
         //-- WITHDRAWAL OPERATION
-        public Operation Retirer(string code, double montant, String codeEmp)
+        public Operation Retirer(string code, double montant, int codeEmp)
         {
 
-            if (code == null || montant == 0 || codeEmp == null)
+            if (code == null || montant == 0 || codeEmp == 0)
             {
                 throw new NullReferenceException("AMOUNT EMPTY");
             }
@@ -46,7 +46,7 @@ namespace BanqueSI.Repository
 
             Operation operation = new Operation();
 
-            if(_context.Employes.Find(codeEmp).Id == null)
+            if(_context.Employes.Find(codeEmp).CodePersonne == 0)
             {
                 throw new NullReferenceException("EMPLOYE NOT FOUND");
             }
@@ -88,10 +88,10 @@ namespace BanqueSI.Repository
         //-- END WITHDRAWAL OPERATION
 
         //-- PAYMENT OPERATION
-        public Operation Verser(string code, double montant, String codeEmp)
+        public Operation Verser(string code, double montant, int codeEmp)
         {
             //-- EXCEPTION 
-            if (code == null || montant == 0 || codeEmp == null)
+            if (code == null || montant == 0 || codeEmp == 0)
             {
                 throw new NullReferenceException("AMOUNT EMPTY");
             }
@@ -108,7 +108,7 @@ namespace BanqueSI.Repository
             Operation operation = new Operation();
 
             //-- EXCEPTION 
-            if (_context.Employes.Find(codeEmp).Id == null)
+            if (_context.Employes.Find(codeEmp).CodePersonne == 0)
             {
                 throw new NullReferenceException("EMPLOYE NOT FOUND");
             }
@@ -145,10 +145,10 @@ namespace BanqueSI.Repository
         //-- END PAYMENT OPERATION
 
         //-- TRANSFER OPERATION
-        public Operation Virement(string cp1, string cp2, double montant, String codeEmp)
+        public Operation Virement(string cp1, string cp2, double montant, int codeEmp)
         {
             //-- EXCEPTION
-            if(cp1 == null || cp2 == null ||montant == 0 ||codeEmp == null)
+            if(cp1 == null || cp2 == null ||montant == 0 ||codeEmp == 0)
             {
                 throw new NullReferenceException("ACCOUNT OR AMOUNT EMPTY");
             }
@@ -178,7 +178,7 @@ namespace BanqueSI.Repository
             compte2.Solde += montant;
 
             //-- EXCEPTION
-            if(_context.Employes.Find(codeEmp).Id == null)
+            if(_context.Employes.Find(codeEmp).CodePersonne == 0)
             {
                 throw new NullReferenceException("EMPLOYE NOT FOUND");
             }
@@ -219,22 +219,22 @@ namespace BanqueSI.Repository
         //-- END TRANSFER OPERATION
 
         //-- GET COUNT PAYMENT BY ID EMPLOYE //
-        public int GetCountVersementByEmploye(String codeEmploye)
+        public int GetCountVersementByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("EMPLOYE ID NOT FOUND");
             }
 
-            if (_context.Operations.Where(x => x.Employe.Id == codeEmploye && x.TypeO == OperationType.V).ToList().Count == 0)
+            if (_context.Operations.Where(x => x.Employe.CodePersonne == codeEmploye && x.TypeO == OperationType.V).ToList().Count == 0)
             {
                 throw new NullReferenceException("No Payment Operation Found");
             }
             //-- END EXCEPTION
 
             //-- GETTING COUNT VERSEMENTS FROM DATABASE
-            List<Operation> countVersements  = _context.Operations.Where(x => x.Employe.Id == codeEmploye && x.TypeO == OperationType.V).ToList();
+            List<Operation> countVersements  = _context.Operations.Where(x => x.Employe.CodePersonne == codeEmploye && x.TypeO == OperationType.V).ToList();
             //-- END GETTING COUNT VERSEMENTS FROM DATABASE
 
             return countVersements.Count;
@@ -242,22 +242,22 @@ namespace BanqueSI.Repository
         //-- END GET COUNT PAYMENT BY ID EMPLOYE //
 
         //-- GET COUNT WITHDRAWAL BY ID EMPLOYE //
-        public int GetCountRetraitByEmploye(String codeEmploye)
+        public int GetCountRetraitByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("EMPLOYE ID NOT FOUND");
             }
 
-            if (_context.Operations.Where(x => x.Employe.Id == codeEmploye && x.TypeO == OperationType.R).ToList().Count == 0)
+            if (_context.Operations.Where(x => x.Employe.CodePersonne == codeEmploye && x.TypeO == OperationType.R).ToList().Count == 0)
             {
                 throw new NullReferenceException("No Withdrawal Operation Found");
             }
             //-- END EXCEPTION
 
             //-- GETTING COUNT RETRAIT FROM DATABASE
-            List<Operation> countVersements = _context.Operations.Where(x => x.Employe.Id == codeEmploye && x.TypeO == OperationType.R).ToList();
+            List<Operation> countVersements = _context.Operations.Where(x => x.Employe.CodePersonne == codeEmploye && x.TypeO == OperationType.R).ToList();
             //-- END GETTING COUNT RETRAIT FROM DATABASE
 
             return countVersements.Count;
@@ -265,22 +265,22 @@ namespace BanqueSI.Repository
         //-- END GET COUNT WITHDRAWAL BY ID EMPLOYE //
 
         //-- GET COUNT OPERATIONS BY ID EMPLOYE //
-        public int GetCountOperationsByEmploye(String codeEmploye)
+        public int GetCountOperationsByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("EMPLOYE ID NOT FOUND");
             }
 
-            if (_context.Operations.Where(o => o.Employe.Id == codeEmploye).Cast<Operation>().ToList().Count == 0)
+            if (_context.Operations.Where(o => o.Employe.CodePersonne == codeEmploye).Cast<Operation>().ToList().Count == 0)
             {
                 throw new NullReferenceException("No Operations Found");
             }
             //-- END EXCEPTION
 
             //-- GETTING COUNT OPERATIONS FROM DATABASE
-            List<Operation> operations = _context.Operations.Where(o => o.Employe.Id == codeEmploye).Cast<Operation>().ToList();
+            List<Operation> operations = _context.Operations.Where(o => o.Employe.CodePersonne== codeEmploye).Cast<Operation>().ToList();
             //- END GETTING COUNT OPERATIONS FROM DATABASE
 
             return operations.Count;
@@ -288,21 +288,21 @@ namespace BanqueSI.Repository
         //-- END GET COUNT OPERATIONS BY ID EMPLOYE //
 
         //-- Get Count Transfer By Employe
-        public int GetCountTransferByEmploye(String codeEmploye)
+        public int GetCountTransferByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("EMPLOYE ID NOT FOUND");
             }
-            if (_context.Operations.Where(o => o.Employe.Id == codeEmploye && o.TypeO == OperationType.VI).Cast<Operation>().ToList().Count == 0)
+            if (_context.Operations.Where(o => o.Employe.CodePersonne == codeEmploye && o.TypeO == OperationType.VI).Cast<Operation>().ToList().Count == 0)
             {
                 throw new NullReferenceException("NO EMPLOYE WITH THIS ID WAS FOUND");
             }
             //-- END EXCEPTION
 
             //-- GETTING COUNT TRANSFER FROM DATABSE
-            List<Operation> operations = _context.Operations.Where(o => o.Employe.Id== codeEmploye && o.TypeO == OperationType.VI).Cast<Operation>().ToList();
+            List<Operation> operations = _context.Operations.Where(o => o.Employe.CodePersonne== codeEmploye && o.TypeO == OperationType.VI).Cast<Operation>().ToList();
             //-- END GETTING COUNT TRANSFER FROM DATABSE
 
             return operations.Count;
@@ -310,21 +310,21 @@ namespace BanqueSI.Repository
         //-- END Get Count Transfer By Employe
 
         //-- GET LATEST TRANSFER BY ID EMPLOYE //
-        public double GetLatestTransactionByEmploye(String  codeEmploye)
+        public double GetLatestTransactionByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("EMPLOYE ID NOT FOUND");
             }
 
-            if(_context.Operations.Where(x => x.Employe.Id == codeEmploye && x.TypeO == OperationType.VI).OrderByDescending(x => x.DateOperation).FirstOrDefault().Montant == 0)
+            if(_context.Operations.Where(x => x.Employe.CodePersonne == codeEmploye && x.TypeO == OperationType.VI).OrderByDescending(x => x.DateOperation).FirstOrDefault().Montant == 0)
             {
                 throw new NullReferenceException("No Transaction Was Found");
             }
             //-- END EXCEPTION
 
-            return _context.Operations.Where(x => x.Employe.Id== codeEmploye && x.TypeO == OperationType.VI ).OrderByDescending(x => x.DateOperation).FirstOrDefault().Montant;
+            return _context.Operations.Where(x => x.Employe.CodePersonne== codeEmploye && x.TypeO == OperationType.VI ).OrderByDescending(x => x.DateOperation).FirstOrDefault().Montant;
         }
         //-- GET LATEST TRANSFER BY ID EMPLOYE //
 
@@ -387,21 +387,21 @@ namespace BanqueSI.Repository
         //-- END GET ALL OPERATIONS //
 
         //-- GETTING OPERATIONS BY EMPLOYE //
-        public List<Operation> GetOperationsByEmploye(String codeEmploye)
+        public List<Operation> GetOperationsByEmploye(int codeEmploye)
         {
             //-- EXCEPTION
-            if (codeEmploye == null)
+            if (codeEmploye == 0)
             {
                 throw new NullReferenceException("Invalid Employe");
             }
-            if(_context.Operations.Where(u => u.Employe.Id == codeEmploye).ToList<Operation>().Count == 0)
+            if(_context.Operations.Where(u => u.Employe.CodePersonne == codeEmploye).ToList<Operation>().Count == 0)
             {
                 throw new NullReferenceException("No Operation Was Found");
             }
             //-- END EXCEPTION
 
             return _context.Operations
-                .Where(u => u.Employe.Id == codeEmploye)
+                .Where(u => u.Employe.CodePersonne == codeEmploye)
                 .ToList<Operation>();
         }
         //-- END GETTING OPERATIONS BY EMPLOYE

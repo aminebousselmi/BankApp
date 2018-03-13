@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     public class ChequeController : Controller
     {
         //-- DBContext // ATTRIBUTS

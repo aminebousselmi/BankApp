@@ -10,11 +10,14 @@ using System.Threading.Tasks;
 namespace BanqueSI.Model.Entities
 {
     [Table("Personne")]
-    public class Personne : IdentityUser
+    public class Personne
     {
         //--ATTRIBUTS
+        [Key]
+        public int CodePersonne { get; set; }
         public String NomPersonne { get; set; }
-        public Agence agence { get; set; }
+        public String Email { get; set; }
+        public Agence Agence { get; set; }
         //--END ATTRIBUTS
 
         //-- CONSTRUCTOR

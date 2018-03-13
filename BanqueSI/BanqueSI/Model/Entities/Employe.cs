@@ -10,8 +10,8 @@ namespace BanqueSI.Model.Entities
     [Table("Employe")]
     public class Employe : Personne
     {
-
-        public Employe() { }
+        public String Username { get; set; }
+        public String Password { get; set; }
 
         //-- RELATION
         public Employe EmployeSup { get; set; }
@@ -20,5 +20,8 @@ namespace BanqueSI.Model.Entities
         public List<Operation> Operations { get; set; }
 
         //-- END RELATION
+
+
+        public Employe() { }
     }
 }

@@ -13,7 +13,7 @@ using BanqueSI.DTO;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     //-- REST API ACCOUNT CONTROLLER 
     public class CompteController : Controller
     {
@@ -34,6 +34,7 @@ namespace BanqueSI.Controllers
 
         //-- GET COUNT ACCOUNT BY AGENCY
         //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountAccountByAgency/{idAgence}")]
         public int GetCountAccountByAgency(int idAgence)
@@ -43,7 +44,8 @@ namespace BanqueSI.Controllers
         //-- END GET COUNT ACCOUNT BY AGENCY
 
         //-- API GetCompte 
-        //-- SECURING API
+        //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCompte/{id}")]
         public CompteDTO GetCompte(String id)
@@ -66,7 +68,7 @@ namespace BanqueSI.Controllers
                 compteDTO.Solde = compte.Solde;
                 compteDTO.Taux = compte.Taux;
                 compteDTO.Type = compte.Type;
-                compteDTO.CodeClient = compte.client.Id;
+                compteDTO.CodeClient = compte.client.CodePersonne;
                 compteDTO.NomClient = compte.client.NomPersonne;
 
                 foreach (Operation operation in compte.Operations)

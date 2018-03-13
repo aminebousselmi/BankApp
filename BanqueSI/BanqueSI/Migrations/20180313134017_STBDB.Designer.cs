@@ -13,9 +13,10 @@ using System;
 namespace BanqueSI.Migrations
 {
     [DbContext(typeof(STBDbContext))]
-    partial class STBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180313134017_STBDB")]
+    partial class STBDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

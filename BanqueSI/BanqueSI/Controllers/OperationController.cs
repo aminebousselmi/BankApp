@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BanqueSI.Controllers
 {
-    [RequireHttps]
+    //[RequireHttps]
     //-- API CONTROLLER OPERATION
     public class OperationController : Controller
     {
@@ -35,10 +35,10 @@ namespace BanqueSI.Controllers
 
         //-- PAYMENT OPERATION API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/Verser/{code}/{montant}/{codeEmp}")]
-        public OperationDTO Verser(String code, double montant, String codeEmp)
+        public OperationDTO Verser(String code, double montant, int codeEmp)
         {
             //-- INSTANSIATION
             OperationDTO operationDTO = new OperationDTO();
@@ -68,10 +68,10 @@ namespace BanqueSI.Controllers
 
         //-- WITHDRAWAL OPERATION API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/Retier/{code}/{montant}/{codeEmp}")]
-        public OperationDTO Retirer(String code, double montant, String codeEmp)
+        public OperationDTO Retirer(String code, double montant, int codeEmp)
         {
             //-- INSTANCIATION
             OperationDTO operationDTO = new OperationDTO();
@@ -100,10 +100,10 @@ namespace BanqueSI.Controllers
 
         //-- TRANSFER OPERATION API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/Virement/{cp1}/{cp2}/{montant}/{codeEmp}")]
-        public OperationDTO Virement(String cp1, String cp2, double montant, String codeEmp)
+        public OperationDTO Virement(String cp1, String cp2, double montant, int codeEmp)
         {
             //-- INSTANCIATION
             OperationDTO operationDTO = new OperationDTO();
@@ -136,10 +136,10 @@ namespace BanqueSI.Controllers
 
         //-- Get Operations By Employe API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetOperationsByEmploye/{codeEmploye}")]
-        public List<OperationDTO> GetOperationsByEmploye(String codeEmploye)
+        public List<OperationDTO> GetOperationsByEmploye(int codeEmploye)
         {
             //-- INSTANCIATION
             List<OperationDTO> operationsDTO = new List<OperationDTO>();
@@ -170,10 +170,10 @@ namespace BanqueSI.Controllers
 
         //-- Get Count Versement By Employe API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountVersementByEmploye/{codeEmploye}")]
-        public int GetCountVersementByEmploye(String codeEmploye)
+        public int GetCountVersementByEmploye(int codeEmploye)
         {
             int CountVersement = 0;
             try
@@ -192,10 +192,10 @@ namespace BanqueSI.Controllers
 
         //-- Get Count Retrait By Employe API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountRetraitByEmploye/{codeEmploye}")]
-        public int GetCountRetraitByEmploye(String codeEmploye)
+        public int GetCountRetraitByEmploye(int codeEmploye)
         {
             int CountRetrait = 0;
             try
@@ -214,7 +214,7 @@ namespace BanqueSI.Controllers
 
         //-- Get Operations API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetOperations")]
         public IEnumerable<OperationDTO> GetOperations()
@@ -249,11 +249,11 @@ namespace BanqueSI.Controllers
         //-- END GET OPERATIONS API
 
         //-- Get Count Operations By Employe API
-        //-- SECURING API
-        //[Authorize(Roles = "EMPLOYE")]
+        //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountOperationsByEmploye/{codeEmploye}")]
-        public int GetCountOperationsByEmploye(String codeEmploye)
+        public int GetCountOperationsByEmploye(int codeEmploye)
         {
             int GetCountOperations = 0;
             try
@@ -273,9 +273,9 @@ namespace BanqueSI.Controllers
         //-- Get Count Transfer By Employe API
         [HttpGet("api/GetCountTransferByEmploye/{codeEmploye}")]
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
-        public int GetCountTransferByEmploye(String codeEmploye)
+        public int GetCountTransferByEmploye(int codeEmploye)
         {
             int CountTransfer = 0;
             try
@@ -294,10 +294,10 @@ namespace BanqueSI.Controllers
 
         //-- Get Latest Transaction By Employe API
         //-- SECURING API 
-        //[Authorize(Roles = "EMPLOYE")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetLatestTransactionByEmploye/{codeEmploye}")]
-        public double GetLatestTransactionByEmploye(String codeEmploye)
+        public double GetLatestTransactionByEmploye(int codeEmploye)
         {
             double LatestTransaction = 0;
             try
@@ -315,7 +315,8 @@ namespace BanqueSI.Controllers
         //-- END Get Latest Transaction By Employe API
 
         //-- Get Count Active Account API
-        //-- SECURING API [Authorize(Roles = "EMPLOYE")]
+        //-- SECURING API 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         [HttpGet("api/GetCountActiveAccount")]
         public int GetCountActiveAccount()
