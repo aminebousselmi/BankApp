@@ -35,6 +35,29 @@ namespace BanqueSI.Repository
         }
         //-- END GET COUNT ACCOUNT BY AGENCY
 
+        //-- GET LIST ACCOUNT BY AGENCY
+        public List<Compte> GetListAccountByAgency(int idAgence)
+        {
+            //-- EXCEPTION
+            if (idAgence == 0)
+            {
+                throw new NullReferenceException("Agency Number empty");
+            }
+            if (_context.Comptes.Where(b => b.Personne.Agence.CodeAgence == idAgence).ToList() == null)
+            {
+                throw new NullReferenceException("No Account Available in this Agency");
+            }
+            //-- END EXCEPION
+                   //-- GETTING DATA FROM DATABASE WITH DAO
+            return _context
+                        .Comptes
+                        .Where(b => b.Personne.Agence.CodeAgence == idAgence)
+                        .ToList();
+                   //-- END GETTING DATA FROM DATABASE WITH DAO
+
+        }
+        //-- END GET LIST ACCOUNT BY AGENCY
+
         //-- GET ACCOUNT BY CODE //
         public Compte GetCompte(string code) 
         {
@@ -49,6 +72,7 @@ namespace BanqueSI.Repository
                 {
                     throw new NullReferenceException("Account invalid");
                 }
+
                 Compte compte = _context.Comptes
                                   .Where(b => b.CodeCompte == code)
                                   .Include(b => b.client)

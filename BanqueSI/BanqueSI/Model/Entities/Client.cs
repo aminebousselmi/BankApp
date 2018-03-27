@@ -14,6 +14,8 @@ namespace BanqueSI.Model.Entities
         //-- RELATION
         [JsonIgnore]
         public List<Compte> Comptes { get; set; }
+        [JsonIgnore]
+        public List<Cheque> Cheques { get; set; }
         //-- END RELATION
 
         public Client() { }

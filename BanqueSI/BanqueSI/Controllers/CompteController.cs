@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using BanqueSI.DTO;
+using BanqueSI.Model.DTO;
 
 namespace BanqueSI.Controllers
 {
@@ -42,6 +43,26 @@ namespace BanqueSI.Controllers
             return _compteRepository.GetCountAccountByAgency(idAgence);
         }
         //-- END GET COUNT ACCOUNT BY AGENCY
+
+        //-- GET GET LIST ACCOUNT BY AGENCY
+        //-- SECURING API 
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //-- END SECURING API  !! ERROR :  CONFIGURING DTO && EXCEPTION !!!
+        [HttpGet("api/GetListAccountByAgency/{idAgence}")]
+        public List<CompteListDTO> GetListAccountByAgency(int idAgence)
+        {
+            List<CompteListDTO> comptesDTO = new List<CompteListDTO>();
+
+            foreach (Compte compte in _compteRepository.GetListAccountByAgency(idAgence))
+            {
+                CompteListDTO compteDTO = new CompteListDTO();
+                compteDTO.CodeCompte = compte.CodeCompte;
+                compteDTO.Solde = compte.Solde;
+                comptesDTO.Add(compteDTO);
+            }
+            return comptesDTO ;
+        }
+        //-- END GET LIST ACCOUNT BY AGENCY
 
         //-- API GetCompte 
         //-- SECURING API 

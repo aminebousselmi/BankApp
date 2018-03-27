@@ -26,6 +26,7 @@ namespace BanqueSI.Model.Entities
         public Employe Personne { get; set; }
         public Client client { get; set; }
         public List<Operation> Operations { get; set; }
+        [JsonIgnore]
         public List<Cheque> Cheques { get; set; }
         //-- END RELATION
 

@@ -13,6 +13,7 @@ namespace BanqueSI.Repository.IRepository
         Compte SaveCompte(Compte cp);
         Compte GetCompte(String code);
         int GetCountAccountByAgency(int idAgence);
+        List<Compte> GetListAccountByAgency(int idAgence);
         void Save();
     }
 }

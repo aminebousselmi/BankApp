@@ -1,4 +1,5 @@
-﻿using BanqueSI.Model.Entities;
+﻿using BanqueSI.Model.DTO;
+using BanqueSI.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,11 @@ namespace BanqueSI.Repository.IRepository
 {
     public interface IChangeRepository : IDisposable
     {
-        Change AchatVenteDevise(Change c);
-        double ConvertisseurDevise(double montant);
-        double ConvertisseurDeviseR(double montant);
+        Change AchatVenteDevise(ChangeDTO c);
+        List<ChangeDTO> GetListChangesByEmploye(int idEmploye);
+        List<ChangeDetailedStatDTO> GetDetailedStatisticalChartByIdEmploye(int idEmploye);
+        double TotalSellDeviseByEmploye(int idEmploye);
+        double TotalBuyDeviseByEmploye(int idEmploye);
         void Save();
     }
 }

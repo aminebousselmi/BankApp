@@ -13428,11 +13428,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\amino\\Desktop\\BanqueSISprint1\\BanqueSI\\BanqueSI\\BanqueSI.csproj",
+      "projectUniqueName": "C:\\Users\\amino\\Desktop\\BanqueSISprint2\\BanqueSI\\BanqueSI\\BanqueSI.csproj",
       "projectName": "BanqueSI",
-      "projectPath": "C:\\Users\\amino\\Desktop\\BanqueSISprint1\\BanqueSI\\BanqueSI\\BanqueSI.csproj",
+      "projectPath": "C:\\Users\\amino\\Desktop\\BanqueSISprint2\\BanqueSI\\BanqueSI\\BanqueSI.csproj",
       "packagesPath": "C:\\Users\\amino\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\amino\\Desktop\\BanqueSISprint1\\BanqueSI\\BanqueSI\\obj\\",
+      "outputPath": "C:\\Users\\amino\\Desktop\\BanqueSISprint2\\BanqueSI\\BanqueSI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

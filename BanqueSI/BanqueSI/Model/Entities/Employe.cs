@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,10 +16,12 @@ namespace BanqueSI.Model.Entities
 
         //-- RELATION
         public Employe EmployeSup { get; set; }
+        [JsonIgnore]
         public List<Change> Changes { get; set; }
         public List<Compte> Comptes { get; set; }
         public List<Operation> Operations { get; set; }
-
+        [JsonIgnore]
+        public List<Cheque> Cheques { get; set; }
         //-- END RELATION
 
 
