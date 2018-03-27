@@ -1,6 +1,9 @@
 import { Component,OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticateService} from '../service/authenticate.service';
+import { Location } from '@angular/common';
+declare var jquery:any;
+declare var $ :any;
 
 @Component({
   moduleId: module.id,
@@ -14,13 +17,17 @@ export class NavbarComponent implements OnInit {
   //-- END ATTRIBUTS
 
   //-- CONSTRUCTOR && INJECTING SERVICES 
-  constructor (private authService: AuthenticateService,private router : Router){
+  constructor (private authService: AuthenticateService,
+               private router : Router
+              ){
   
   
   }
   //-- END CONSTRUCTOR && INJECTING SERVICES 
 
   //-- INITIALIZING EMPLOYE DATA
+ 
+
   ngOnInit() {
     this.authService.getUsernameInfo$().subscribe(
         res => {
@@ -40,7 +47,7 @@ export class NavbarComponent implements OnInit {
   }
 
   public reload(){
-    window.location.reload();
+    location.reload();
   }
   //-- END LOGOUT FUNCTION
 }

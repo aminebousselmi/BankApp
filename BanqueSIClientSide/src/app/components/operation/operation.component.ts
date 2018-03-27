@@ -8,7 +8,7 @@ import {DataFilterPipe} from '../filter/data-filter-pipe';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Overlay } from 'ngx-modialog';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   moduleId: module.id,
   selector: 'operation',
@@ -28,6 +28,7 @@ export class OperationComponent {
   amountR = 0;
   amountVI = 0;
   dialogResult = null;
+
   //-- END ATTRIBUTS
 
   //-- CONSTRUCTOR
@@ -37,10 +38,11 @@ export class OperationComponent {
     private authService : AuthenticateService,
     private toastr: ToastsManager,
     private vcr: ViewContainerRef,
-    private modal: Modal
+    private modal: Modal,
+    private spinnerService: Ng4LoadingSpinnerService
     
   ) {
-     
+    this.spinnerService.show();
     this.toastr.setRootViewContainerRef(vcr);
   }
   //-- END CONSTRUCTOR
@@ -59,7 +61,7 @@ export class OperationComponent {
               }
           );
         });   
-        this.GetActiveAcc();  
+        this.GetActiveAcc(); 
 }
 
   //-- GET COMPTE BY ACCOUNT NUMBER
@@ -67,6 +69,7 @@ export class OperationComponent {
     this.compteService.getCompteByNumber(numberACC).subscribe(data => 
       {
         this.compte = data;
+        console.log(data);
         if(this.compte.codeCompte == null){
           this.showError(this.compte.resultMessage);
         }else{
@@ -97,13 +100,14 @@ export class OperationComponent {
           if(data.numeroOperation == 0){
               this.showErrorO(data.messageResult);
           }else{
+            this.loadCompteByNumber(this.compte.codeCompte);
+            this.GetCountOperationsByEmp();
+            this.GetActiveAcc();
             this.showValidO(data.messageResult);
           }
           
         }
       );
-      this.GetCountOperationsByEmp();
-      this.GetActiveAcc();
     })
     .catch((err: any) => {
         this.showError("Transaction Annulée");
@@ -127,12 +131,13 @@ export class OperationComponent {
           if(data.numeroOperation == 0){
             this.showErrorO(data.messageResult);
           }else{
-          this.showValidO(data.messageResult)
+          this.loadCompteByNumber(this.compte.codeCompte);
+          this.GetCountOperationsByEmp();
+          this.GetActiveAcc();
+          this.showValidO(data.messageResult);
           }
         }
       );
-      this.GetCountOperationsByEmp();
-      this.GetActiveAcc();
     })
     .catch((err: any) => {
         this.showError("Transaction Annulée");
@@ -156,12 +161,15 @@ export class OperationComponent {
           if(data.numeroOperation == 0 || compte2 == null){
             this.showErrorO(data.messageResult);
           }else{
-            this.showValidO(data.messageResult)
+            this.loadCompteByNumber(this.compte.codeCompte);
+            this.GetCountOperationsByEmp();
+            this.GetActiveAcc();
+            this.GetCountTransferByEmp();
+            this.GetLatestTransferByEmp();
+            this.showValidO(data.messageResult);
           }
         }
       );
-      this.GetCountOperationsByEmp();
-      this.GetActiveAcc();
     })
     .catch((err: any) => {
         this.showError("Transaction Annulée");
@@ -191,6 +199,7 @@ export class OperationComponent {
         data => 
         {
           this.LatestTransfer = data;
+          this.spinnerService.hide();
         }
     );
   }

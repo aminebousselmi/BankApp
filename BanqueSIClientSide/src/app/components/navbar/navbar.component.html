@@ -39,10 +39,10 @@
                <a [routerLink]="['operation']" (click)="reload()"><span class="fa fa-cogs"></span> <span class="xn-text">Normal Operation</span></a>
            </li>                    
            <li>
-               <a ><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
+               <a [routerLink]="['cheque']" (click)="reload()"><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
            </li>
            <li>
-               <a ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Devise</span></a>
+               <a [routerLink]="['change']" (click)="reload()" ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Currency</span></a>
            </li>
    
            <li class="xn-title">Additional Services</li>
@@ -50,7 +50,7 @@
             <a><span class="fa fa-credit-card"></span> <span class="xn-text">Bank Card</span></a>                        
            </li>
            <li>
-            <a><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service </span></a>                        
+            <a [routerLink]="['email']"><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service </span></a>                        
            </li>
            <li>
                <a><span class="fa fa-table"></span> <span class="xn-text">Daily Task</span></a>                        
@@ -149,4 +149,4 @@
              
        <!-- END PAGE CONTENT -->
        </div>
-       <!-- END PAGE CONTAINER -->
+       <!-- END PAGE CONTAINER --> 

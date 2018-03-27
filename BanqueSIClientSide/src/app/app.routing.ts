@@ -5,7 +5,11 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {LoginComponent} from './components/login/login.component';
 import {OperationComponent} from './components/operation/operation.component';
+import { ChequeComponent } from './components/cheque/cheque.component';
+import { ChangeComponent } from './components/change/change.component';
+import { EmailComponent } from './components/email/email.component';
 import { AuthenticateService } from './components/service/authenticate.service';
+
 const  appRoutes: Routes = [
     {
         path:'',
@@ -28,6 +32,22 @@ const  appRoutes: Routes = [
                 component:OperationComponent,
                 canActivate: [AuthenticateService]
    
+            },
+            {
+                path:'cheque',
+                component:ChequeComponent,
+                canActivate: [AuthenticateService]
+   
+            },
+            {
+                path:'change',
+                component:ChangeComponent,
+                canActivate: [AuthenticateService]
+            },
+            {
+                path:'email',
+                component:EmailComponent,
+                canActivate: [AuthenticateService]
             }
         ]
     }

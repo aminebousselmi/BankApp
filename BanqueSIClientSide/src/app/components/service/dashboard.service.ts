@@ -15,13 +15,25 @@ export class DashboardService {
     constructor(private http: HttpClient,private jwtHelper: JwtHelper){
     }
 
+    GetDetailedStatisticalChartByIdEmploye(codeEmp) {
+        return this.authGet$(`http://localhost:44365/api/GetDetailedStatisticalChartByIdEmploye/`+codeEmp)
+    }
+
     GetCountVersementByEmploye(codeEmp) {
         return this.authGet$(`http://localhost:44365/api/GetCountVersementByEmploye/`+codeEmp)
-      }
+    }
 
-      GetCountRetraitByEmploye(codeEmp) {
+    GetTotalBuyDeviseByEmploye(codeEmp) {
+        return this.authGet$(`http://localhost:44365/api/TotalBuyDeviseByEmploye/`+codeEmp)
+    }
+
+    GetTotalSellDeviseByEmploye(codeEmp) {
+        return this.authGet$(`http://localhost:44365/api/TotalSellDeviseByEmploye/`+codeEmp)
+    }
+
+    GetCountRetraitByEmploye(codeEmp) {
         return this.authGet$(`http://localhost:44365/api/GetCountRetraitByEmploye/`+codeEmp)
-      }
+    }
 
       GetCountVirementByEmploye(codeEmp) {
         return this.authGet$(`http://localhost:44365/api/GetCountTransferByEmploye/`+codeEmp)
@@ -39,6 +51,7 @@ export class DashboardService {
         return this.authGet$(`http://localhost:44365/api/GetCountAccountByAgency/`+codeAgence)
       }
 
+    
       //-- SECURING API DATA
       public authGet$(url) {
           let header = this.initAuthHeaders();

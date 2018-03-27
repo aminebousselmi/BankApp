@@ -1,13 +1,13 @@
+<ng4-loading-spinner> </ng4-loading-spinner>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
-    <li><a href="">STB</a></li>                    
+    <li><a>STB</a></li>                    
     <li>Dashboard</li>
 </ul>
 <!-- END BREADCRUMB -->                       
 
 <!-- PAGE CONTENT WRAPPER -->
 <div class="page-content-wrap">
-    
     <!-- START WIDGETS -->                    
     <div class="row">
         <div class="col-md-3">
@@ -29,7 +29,7 @@
                     </div>
                 </div>                            
                 <div class="widget-controls">                                
-                    <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+                    <a class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
                 </div>                             
             </div>         
             <!-- END WIDGET PAYMENT TRANSFER WITHDRAWAL OPERATIONS-->
@@ -48,7 +48,7 @@
                     <div class="widget-subtitle">In Agency</div>
                 </div>      
                 <div class="widget-controls">                                
-                    <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+                    <a  class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
                 </div>
             </div>                            
             <!-- END WIDGET MESSAGES -->
@@ -67,7 +67,7 @@
                     <div class="widget-subtitle">In Agency</div>
                 </div>
                 <div class="widget-controls">                                
-                    <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+                    <a  class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
                 </div>                            
             </div>                            
             <!-- END WIDGET REGISTRED -->
@@ -80,7 +80,7 @@
                 <div class="widget-big-int plugin-clock">00:00</div>                            
                 <div class="widget-subtitle plugin-date">Loading...</div>
                 <div class="widget-controls">                                
-                    <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span class="fa fa-times"></span></a>
+                    <a class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span class="fa fa-times"></span></a>
                 </div>                            
                 <div class="widget-buttons widget-c3">
                     <div class="col">
@@ -140,12 +140,12 @@
                         <span>List of Operations</span>
                     </div>                                    
                     <ul class="panel-controls" style="margin-top: 2px;">
-                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                        <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                            <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
                             <ul class="dropdown-menu">
-                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
                             </ul>                                        
                         </li>                                        
                     </ul>
@@ -159,6 +159,7 @@
                                     <th width="50%">ID</th>
                                     <th width="20%">Date</th>
                                     <th width="30%">Amount</th>
+                                    <th width="30%">Type</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,6 +167,9 @@
                                     <td><strong>{{oper.numeroOperation}}</strong></td>
                                     <td><span class="label label-success">{{oper.dateOperation}}</span></td>
                                     <td>{{oper.montant}}</td>
+                                    <td *ngIf="oper.typeO == 0"><span class="label label-danger">Payment</span></td>
+                                    <td *ngIf="oper.typeO == 1"><span class="label label-danger">Withdrawal</span></td>
+                                    <td *ngIf="oper.typeO == 2"><span class="label label-danger">Transfer</span></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -182,5 +186,94 @@
             
         </div>
     </div> 
+    <div class="row">
+            <div class="col-md-6">
+            
+                    <!-- START statistical Operations -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title-box">
+                                <h3>Currency Operations</h3>
+                                <span><strong>Total Buy</strong></span>
+                            </div>                                    
+                            <ul class="panel-controls" style="margin-top: 2px;">
+                                <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                <li class="dropdown">
+                                    <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                    <ul class="dropdown-menu">
+                                        <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                        <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                    </ul>                                        
+                                </li>                                        
+                            </ul>                                    
+                        </div>                                
+                        <div class="panel-body padding-0">
+                            <div id="chartdiv"></div>
+                        </div>                                    
+                    </div>
+                    <!-- END statistical Operations -->
+                    
+                </div>
+
+                <div class="col-md-6">
+            
+                        <!-- START statistical Operations -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-title-box">
+                                    <h3>Currency Operations</h3>
+                                    <span><strong>Total Sell</strong></span>
+                                </div>                                    
+                                <ul class="panel-controls" style="margin-top: 2px;">
+                                    <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                    <li class="dropdown">
+                                        <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                        <ul class="dropdown-menu">
+                                            <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                            <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                        </ul>                                        
+                                    </li>                                        
+                                </ul>                                    
+                            </div>                                
+                            <div class="panel-body padding-0">
+                                <div id="chartdivSell"></div>
+                            </div>                                    
+                        </div>
+                        <!-- END statistical Operations -->
+                        
+                    </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+            
+                    <!-- START statistical Operations -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title-box">
+                                <h3>Currency Operations Detailed</h3>
+                                <span><strong>Sell & Buy Currency</strong></span>
+                            </div>                                    
+                            <ul class="panel-controls" style="margin-top: 2px;">
+                                <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                <li class="dropdown">
+                                    <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                    <ul class="dropdown-menu">
+                                        <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                        <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                    </ul>                                        
+                                </li>                                        
+                            </ul>                                    
+                        </div>                                
+                        <div class="panel-body padding-0">
+                            <div id="chartdivDetailed"></div>
+                        </div>                                    
+                    </div>
+                    <!-- END statistical Operations -->
+                    
+                </div>
+    </div>
 </div>
-<!-- END PAGE CONTENT WRAPPER -->                                
+<!-- END PAGE CONTENT WRAPPER -->        
+
+
+

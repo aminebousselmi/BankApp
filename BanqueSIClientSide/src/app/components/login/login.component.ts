@@ -3,7 +3,6 @@ import { AuthenticateService } from '../service/authenticate.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-
 @Component({
   moduleId: module.id,
   selector: 'login',
@@ -21,8 +20,6 @@ export class LoginComponent implements OnDestroy {
     //-- CONSTRUCTOR && INJECTING SERVICES 
     constructor(private authenticateService: AuthenticateService, private router:Router,private toastr: ToastsManager,private vcr: ViewContainerRef) 
     {
-    
-  
         this.toastr.setRootViewContainerRef(vcr);
     }
     //-- END CONSTRUCTOR && INJECTING SERVICES 

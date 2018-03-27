@@ -1,0 +1,253 @@
+<ng4-loading-spinner> </ng4-loading-spinner>
+<!-- START BREADCRUMB -->
+  <ul class="breadcrumb">
+        <li><a>STB</a></li>
+        <li class="active">Buy/Sell Currency</li>
+    </ul>
+    <!-- END BREADCRUMB -->                
+    
+    <!-- PAGE TITLE -->
+    <div class="page-title">                    
+        <h2><span class="fa fa-cogs"></span>Buy/Sell Currency</h2>
+    </div>
+    <!-- END PAGE TITLE -->      
+  <!-- PAGE CONTENT WRAPPER -->
+  <div class="page-content-wrap">
+        <div class="row">
+               
+                    <div class="col-md-12">
+                            <div class="panel panel-default">  
+                                    <div class="panel-heading"> 
+                                            <h3>Variation Of The TND Campared To EURO</h3>                                 
+                                            <ul class="panel-controls" style="margin-top: 2px;">
+                                                <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                                <li class="dropdown">
+                                                    <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                                    <ul class="dropdown-menu">
+                                                        <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                        <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                                    </ul>                                        
+                                                </li>                                        
+                                            </ul>                                    
+                                        </div>                        
+                                    <div class="panel-body">
+                
+                                        <div class="row">
+                                            <div id="chartdivD"></div>
+                                        </div>   
+                
+                                    </div>
+                            </div>
+                            </div>
+    </div>
+
+    <div class="row">
+            <div class="col-md-6">
+                    <!-- START VERTICAL TABS WITH HEADING -->
+                    <div class="panel panel-default nav-tabs-vertical">                   
+                            <div class="panel-heading">
+                                    <div class="panel-title-box">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label text-left">Buy</label>
+                                                <div class="col-md-3">
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="switch" [checked]="SelectedTypeChange" (change)="SelectedTypeChangeFunction()"/>
+                                                        <span></span>
+                                                    </label>                                            
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="col-md-4 control-label text-left">Sell</label>
+                                                </div>
+                                            </div>  
+                                        </div>                                     
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                        <li class="dropdown">
+                                            <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                            <ul class="dropdown-menu">
+                                                <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                            </ul>                                        
+                                        </li>                                        
+                                    </ul>  
+                            </div>
+                        <div class="tabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab19" data-toggle="tab">Person Information</a></li>
+                                <li><a href="#tab20" data-toggle="tab">Change Information</a></li>
+                            </ul>                    
+                            <div class="panel-body tab-content">
+                               
+                                <div class="tab-pane active" id="tab19">
+                                        <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control"  [(ngModel)]="Change.NomP" name="Change.NomP"  placeholder="Name"/>
+                                            </div>
+                                            
+                                            <div class="form-group">                                        
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control"  [(ngModel)]="Change.PrenomP" name="Change.PrenomP" placeholder="Last Name"/>
+                                            </div>
+        
+                                            <div class="form-group">                                        
+                                                <label>Identity Number</label>
+                                                <input type="text" class="form-control"   [(ngModel)]="Change.Identif" name="Change.Identif" placeholder="Identity Number"/>
+                                            </div>
+                                </div>
+                                <div class="tab-pane" id="tab20">
+                                        <div class="form-group" *ngIf="SelectedTypeChange == 0">                                        
+                                                <label>Adress</label>
+                                                <input type="text" class="form-control"  [(ngModel)]="Change.AdresseP" name="Change.AdresseP"  placeholder="Adress" />
+                                        </div>
+                                            
+                                        <div class="form-group" *ngIf="SelectedTypeChange == 0">
+                                            <label>Destination</label>
+                                            <input type="text" class="form-control"  [(ngModel)]="Change.Destination" name="Change.Destination" placeholder="Destination"/>
+                                        </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Currency name</label>                                                                                         
+                                                <select class="form-control"  [(ngModel)]="SelectedCodeChange" name="SelectedCodeChange">
+                                                        <option *ngFor="let dataCurr of dataCurrency" [value]="dataCurr.code">{{dataCurr.name}}</option>
+                                                </select>
+                                            </div>
+        
+                                            <div class="form-group">                                        
+                                                <label>Amount</label>
+                                                <input type="text" class="form-control"   [(ngModel)]="Change.Montant" name="Change.Montant"  placeholder="Amount"/>
+                                                <button class="btn btn-success" (click)="GetAmountConverted(Change.Montant)">Convert</button>
+                                            </div>
+                                            <div class="form-group">                                        
+                                                    <label>Amount Converted</label>
+                                                    <input type="text" class="form-control" [value]="Change.MontantConverted" [(ngModel)]="Change.MontantConverted" name="Change.MontantConverted" placeholder="Amount Converted" disabled/>
+                                            </div>
+
+                                            <div class="form-group">                                   
+                                                <button class="btn btn-success" (click)="AddDeviseOperation()">Valid Operation</button>
+                                            </div>
+                                </div> 
+                                                       
+                            </div>
+                        </div>
+                    </div>                        
+                    <!-- END VERTICAL TABS WITH HEADING -->
+                </div>
+                <div class="col-md-6">
+                        <!-- TABS WIDGET -->
+                        <div class="panel panel-default">
+                                <div class="panel-heading"> 
+                                        <div class="panel-title-box">
+                                                <h3>Convert Currency</h3>
+                                            </div>                                     
+                                        <ul class="panel-controls" style="margin-top: 2px;">
+                                            <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                            <li class="dropdown">
+                                                <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                                <ul class="dropdown-menu">
+                                                    <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                    <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                                </ul>                                        
+                                            </li>                                        
+                                        </ul>                                    
+                                    </div>  
+                                <div class="panel-body tab-content">
+                                    <div class="tab-pane active" id="versement">
+                                        <form (submit)="ConvertDevise()">
+                                            <div class="form-group">
+                                                    <label>From</label>                                                                                
+                                                        <select class="form-control " [(ngModel)]="From" name="From">
+                                                            <option *ngFor="let dataCurr of dataCurrency" [value]="dataCurr.code">{{dataCurr.name}}</option>
+                                                        </select>   
+                                            </div>
+    
+                                            <div class="form-group">
+                                                    <label>To</label>                                                                                
+                                                        <select class="form-control"  [(ngModel)]="To" name="To">
+                                                                <option *ngFor="let dataCurr of dataCurrency" [value]="dataCurr.code">{{dataCurr.name}}</option>
+                                                        </select>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label>Amount</label>
+                                                    <input type="text" class="form-control" placeholder="Amount" [(ngModel)]="Amount" name="Amount"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                    <button class="btn btn-success btn-block" >Convert</button>
+                                            </div>
+                                        </form>
+                                    </div>                     
+                                </div>
+                            </div>       
+                            <!-- END TABS WIDGET -->
+                        </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+                    <div class="panel panel-default">
+                            <div class="panel-heading">
+                               <h3 class="panel-title">Change Information</h3>   
+                               <ul class="panel-controls" style="margin-top: 2px;">
+                                    <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                    <li class="dropdown">
+                                        <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                        <ul class="dropdown-menu">
+                                            <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                            <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                        </ul>                                        
+                                    </li>                                        
+                                </ul>                                     
+                           </div>
+                           <div class="panel-body">
+                               <div class="panel-body panel-body-table">
+               
+                                   <div class="table-responsive">
+                                       <table class="table table-bordered table-striped"  [mfData]="ChangeTable" id="operationsInfo" #mf="mfDataTable" [mfRowsOnPage]="5">
+                                           <thead>
+                                               <tr>
+                                                   <th width="10%"><mfDefaultSorter by="Number">PASSPORT Number</mfDefaultSorter></th>
+                                                   <th width="50%">Date Change</th>
+                                                   <th width="10%"><mfDefaultSorter >Name & Last Name</mfDefaultSorter></th>
+                                                   <th width="30%"><mfDefaultSorter >Change Type</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >From Currency Code</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >From Currency Name</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >To Currency Code</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >To Currency Name</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >Exchange Rate</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >Amount</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >Amount Converted</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >Adress</mfDefaultSorter></th>
+                                                   <th width="10%"><mfDefaultSorter >Destination</mfDefaultSorter></th>
+                                               </tr>
+                                           </thead>
+                                           <tbody>
+                                               <tr *ngFor="let chng of mf.data">
+                                                   <td><strong>{{chng.identif}}</strong></td>
+                                                   <td><span class="label label-danger">{{chng.dateChange}}</span></td>
+                                                   <td><strong>{{chng.nomP}}</strong> <strong>{{chng.prenomP}}</strong></td>
+                                                   <td *ngIf="chng.changeType == 0"><span class="label label-success">SELL</span></td>
+                                                   <td *ngIf="chng.changeType == 1"><span class="label label-success">BUY</span></td>
+                                                   <td><span class="label label-warning">{{chng.fromCurrencyCode}}</span></td>
+                                                   <td><strong>{{chng.fromCurrencyName}}</strong></td>
+                                                   <td><span class="label label-warning">{{chng.toCurrencyCode}}</span></td>
+                                                   <td><strong>{{chng.toCurrencyName}}</strong></td>
+                                                   <td><strong>{{chng.exchangeRate}}</strong></td>
+                                                   <td><strong>{{chng.montant}}</strong></td>
+                                                   <td><span class="label label-danger">{{chng.montantConverted}}</span></td>
+                                                   <td *ngIf="chng.adresseP != null"><strong>{{chng.adresseP}}</strong></td>
+                                                   <td *ngIf="chng.adresseP == null"><strong>-</strong></td>
+                                                   <td *ngIf="chng.adresseP != null"><strong>{{chng.destination}}</strong></td>
+                                                   <td *ngIf="chng.adresseP == null"><strong>-</strong></td>
+                                               </tr>
+                                           </tbody>
+                                           <tfoot>
+                                               <tr class="pagination pagination-sm pull-right">
+                                                       <mfBootstrapPaginator></mfBootstrapPaginator>        
+                                               </tr>
+                                           </tfoot>
+                                       </table>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+            </div>
+    </div>
+</div>
