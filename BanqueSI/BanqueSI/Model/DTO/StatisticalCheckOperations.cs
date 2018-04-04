@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BanqueSI.Model.DTO
 {
-    public class StatisticalCheckOperations
+    public class StatisticalCheckOperationsDTO
     {
         public Double MinPercentageAmountCheck { get; set;}
         public Double MaxPercentageAmountCheck { get; set; }

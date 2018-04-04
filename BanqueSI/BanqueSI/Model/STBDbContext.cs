@@ -20,6 +20,7 @@ namespace BanqueSI.Model
         public DbSet<Employe> Employes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Operation> Operations { get; set; }
+        public DbSet<Mail> Mails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         =>

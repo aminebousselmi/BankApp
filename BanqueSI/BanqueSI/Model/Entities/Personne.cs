@@ -18,6 +18,12 @@ namespace BanqueSI.Model.Entities
         public String NomPersonne { get; set; }
         public String Email { get; set; }
         public Agence Agence { get; set; }
+
+        //-- RELATIONS
+        [JsonIgnore]
+        public List<Mail> Mail {get; set;}    
+        //-- END RELATIONS
+
         //--END ATTRIBUTS
 
         //-- CONSTRUCTOR
