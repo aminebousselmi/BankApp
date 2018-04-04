@@ -81,28 +81,29 @@
                                 <div class="tab-pane active" id="tab19">
                                         <div class="form-group">
                                                 <label>Name</label>
-                                                <input type="text" class="form-control"  [(ngModel)]="Change.NomP" name="Change.NomP"  placeholder="Name"/>
+                                                <input type="text" class="form-control" (keypress)="_keyPress($event)" [(ngModel)]="Change.NomP" name="Change.NomP"  placeholder="Name"/>
+                                                
                                             </div>
                                             
                                             <div class="form-group">                                        
                                                 <label>Last Name</label>
-                                                <input type="text" class="form-control"  [(ngModel)]="Change.PrenomP" name="Change.PrenomP" placeholder="Last Name"/>
+                                                <input type="text" class="form-control" (keypress)="_keyPress($event)"    [(ngModel)]="Change.PrenomP" name="Change.PrenomP" placeholder="Last Name"/>
                                             </div>
         
                                             <div class="form-group">                                        
                                                 <label>Identity Number</label>
-                                                <input type="text" class="form-control"   [(ngModel)]="Change.Identif" name="Change.Identif" placeholder="Identity Number"/>
+                                                <input type="text" class="form-control"    [(ngModel)]="Change.Identif" name="Change.Identif" placeholder="Identity Number" minlength="7" maxlength="7"/>
                                             </div>
                                 </div>
                                 <div class="tab-pane" id="tab20">
-                                        <div class="form-group" *ngIf="SelectedTypeChange == 0">                                        
+                                        <div class="form-group" *ngIf="SelectedTypeChange == 1">                                        
                                                 <label>Adress</label>
                                                 <input type="text" class="form-control"  [(ngModel)]="Change.AdresseP" name="Change.AdresseP"  placeholder="Adress" />
                                         </div>
                                             
-                                        <div class="form-group" *ngIf="SelectedTypeChange == 0">
+                                        <div class="form-group" *ngIf="SelectedTypeChange == 1">
                                             <label>Destination</label>
-                                            <input type="text" class="form-control"  [(ngModel)]="Change.Destination" name="Change.Destination" placeholder="Destination"/>
+                                            <input ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places"  class="form-control" (onAddressChange)="handleAddressChange($event)"  [(ngModel)]="Change.Destination" name="Change.Destination" placeholder="Destination"/>
                                         </div>
                                             
                                             <div class="form-group">
@@ -114,8 +115,8 @@
         
                                             <div class="form-group">                                        
                                                 <label>Amount</label>
-                                                <input type="text" class="form-control"   [(ngModel)]="Change.Montant" name="Change.Montant"  placeholder="Amount"/>
-                                                <button class="btn btn-success" (click)="GetAmountConverted(Change.Montant)">Convert</button>
+                                                <input type="number" class="form-control" (keyup.enter)="GetAmountConverted(Change.Montant)"   [(ngModel)]="Change.Montant" name="Change.Montant"  placeholder="Amount"/>
+                                                
                                             </div>
                                             <div class="form-group">                                        
                                                     <label>Amount Converted</label>
@@ -168,7 +169,7 @@
                                             </div>
                                             <div class="form-group">
                                                     <label>Amount</label>
-                                                    <input type="text" class="form-control" placeholder="Amount" [(ngModel)]="Amount" name="Amount"/>
+                                                    <input type="number" class="form-control" placeholder="Amount" [(ngModel)]="Amount" name="Amount"/>
                                             </div>
                                             <div class="col-md-4">
                                                     <button class="btn btn-success btn-block" >Convert</button>
@@ -218,13 +219,30 @@
                                                    <th width="10%"><mfDefaultSorter >Destination</mfDefaultSorter></th>
                                                </tr>
                                            </thead>
-                                           <tbody>
-                                               <tr *ngFor="let chng of mf.data">
+                                           <tbody *ngIf="ChangeTable == null">
+                                               <tr>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                                    <td><strong>No Data Available</strong></td>
+                                               </tr>
+                                            </tbody>
+                                            <tbody  *ngIf="ChangeTable != null">
+                                               <tr  *ngFor="let chng of mf.data">
                                                    <td><strong>{{chng.identif}}</strong></td>
                                                    <td><span class="label label-danger">{{chng.dateChange}}</span></td>
                                                    <td><strong>{{chng.nomP}}</strong> <strong>{{chng.prenomP}}</strong></td>
-                                                   <td *ngIf="chng.changeType == 0"><span class="label label-success">SELL</span></td>
-                                                   <td *ngIf="chng.changeType == 1"><span class="label label-success">BUY</span></td>
+                                                   <td *ngIf="chng.changeType == 1"><span class="label label-success">SELL</span></td>
+                                                   <td *ngIf="chng.changeType == 0"><span class="label label-success">BUY</span></td>
                                                    <td><span class="label label-warning">{{chng.fromCurrencyCode}}</span></td>
                                                    <td><strong>{{chng.fromCurrencyName}}</strong></td>
                                                    <td><span class="label label-warning">{{chng.toCurrencyCode}}</span></td>
@@ -238,8 +256,8 @@
                                                    <td *ngIf="chng.adresseP == null"><strong>-</strong></td>
                                                </tr>
                                            </tbody>
-                                           <tfoot>
-                                               <tr class="pagination pagination-sm pull-right">
+                                           <tfoot >
+                                               <tr class="pagination pagination-sm pull-right"  *ngIf="ChangeTable != null" >
                                                        <mfBootstrapPaginator></mfBootstrapPaginator>        
                                                </tr>
                                            </tfoot>

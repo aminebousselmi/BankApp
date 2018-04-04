@@ -1,4 +1,4 @@
-import { Component,ViewContainerRef,OnInit } from '@angular/core';
+import { Component,ViewContainerRef,OnInit,AfterViewInit } from '@angular/core';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import {ChequeService} from '../service/cheque.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -11,7 +11,7 @@ import {Chart} from 'chart.js';
   selector: 'cheque',
   templateUrl: 'cheque.component.html'
 })
-export class  ChequeComponent implements OnInit {
+export class  ChequeComponent implements OnInit,AfterViewInit {
 
   //-- ATTRIBUTS
   Employe : {codePersonne : null,agence: {codeAgence:0}};
@@ -30,7 +30,6 @@ export class  ChequeComponent implements OnInit {
   AmountMax = [];
   AmountAverage = [];
   alldates = [];
-  jsdate = [];
   //-END ATTRIBUTS  
 
   //-- CONSTRUCTOR
@@ -63,6 +62,41 @@ export class  ChequeComponent implements OnInit {
                 }
             );
           });
+    }
+
+    async ngAfterViewInit() {
+      await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
+      await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
+      await this.loadScript("../../../assets/js/plugins/icheck/icheck.min.js");
+      await this.loadScript("../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
+      await this.loadScript("../../../assets/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js");
+      await this.loadScript("../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
+      await this.loadScript("../../../assets/js/plugins/rickshaw/d3.v3.js");
+      await this.loadScript("../../../assets/js/plugins/rickshaw/rickshaw.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-timepicker.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-colorpicker.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-file-input.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-select.js");
+      await this.loadScript("../../../assets/js/plugins/tagsinput/jquery.tagsinput.min.js");
+      await this.loadScript("../../../assets/js/plugins/owl/owl.carousel.min.js");
+      await this.loadScript("../../../assets/js/plugins/knob/jquery.knob.min.js");
+      await this.loadScript("../../../assets/js/plugins/moment.min.js");
+      await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
+      await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
+      await this.loadScript("../../../assets/js/plugins.js");
+      await this.loadScript("../../../assets/js/actions.js");
+      await this.loadScript("../../../assets/js/demo_dashboard.js");
+  
+    }
+    private loadScript(scriptUrl: string) {
+      return new Promise((resolve, reject) => {
+        const scriptElement = document.createElement('script')
+        scriptElement.src = scriptUrl
+        scriptElement.onload = resolve
+        document.body.appendChild(scriptElement)
+      })
     }
   //-- END INITIALIZING EMPLOYE DATA
   
@@ -105,10 +139,8 @@ export class  ChequeComponent implements OnInit {
             data => {
 
                 if(data.idC == 0){
-                  console.log(data);
                   this.showError(data.messageResult);
                 }else{
-                  console.log(data);
                   this.showValid(data.messageResult);
                 }
             }
@@ -169,6 +201,41 @@ export class  ChequeComponent implements OnInit {
        });
       }
   )
+  }
+
+  GetAccountByCheck(codeCompte,dateCreation,solde,decouvert,taux){
+    var decTaux = null;
+    var decTauxString = null;
+    if(taux != null){
+        decTaux = taux;
+        decTauxString = "Taux";
+    }else{
+      decTaux = decouvert;
+      decTauxString = "Decouvert";
+    }
+    const dialogRef = this.modal.alert()
+    .size('sm')
+    .isBlocking(true)
+    .title('Account Detail')
+    .body(`
+    <!-- LIST GROUP WITH BADGES -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="list-group border-bottom">
+                <li class="list-group-item">Account Number <span class="badge badge-info">`+codeCompte+`</span></li>
+                <li class="list-group-item">Date <span class="badge badge-danger">`+dateCreation+`</span></li>
+                <li class="list-group-item">Balance <span class="badge badge-info">`+solde+`</span></li>
+                <li class="list-group-item">`+decTauxString+`<span class="badge badge-danger">`+decTaux+`</span></li>
+            </ul>                                
+        </div>
+    </div>
+    <!-- END LIST GROUP WITH BADGES -->
+    `)
+    .open().result.then((dialog: any) => 
+    {
+    })
+    .catch((err: any) => {
+    });
   }
 
   GetStatisticalCheckChartAmount(){
@@ -240,7 +307,6 @@ export class  ChequeComponent implements OnInit {
   showError(msg) {
     this.toastr.error(msg, "Error Message");
   }
-
   showValid(msg) {
     this.toastr.success(msg, 'Confirming message!');
   }

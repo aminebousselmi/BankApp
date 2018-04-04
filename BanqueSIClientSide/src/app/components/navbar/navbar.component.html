@@ -19,42 +19,41 @@
                    </div>
                    <div class="profile-data">
                        <div class="profile-data-name" *ngIf="Employe?.nomPersonne != null">{{Employe?.nomPersonne}}</div>
-                       <!--<div class="profile-data-title" *ngIf="Employe.TypePersonne == 1">EMPLOYE</div>
-                       <div class="profile-data-title" *ngIf="Employe.TypePersonne == 0">CLIENT</div>-->
+                       
                    </div>
                    <div class="profile-controls">
                        <a  class="profile-control-left"><span class="fa fa-info"></span></a>
-                       <a  class="profile-control-right"><span class="fa fa-envelope"></span></a>
+                       <a  [routerLink]="['email/inbox']"  class="profile-control-right"><span class="fa fa-envelope"></span></a>
                    </div>
                </div>                                                                        
            </li>
    
            <li class="xn-title">Home</li>
            <li>
-               <a [routerLink]="['dashboard']" (click)="reload()"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
+               <a [routerLink]="['dashboard']" ><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
            </li>
    
            <li class="xn-title">Operations</li>
            <li>
-               <a [routerLink]="['operation']" (click)="reload()"><span class="fa fa-cogs"></span> <span class="xn-text">Normal Operation</span></a>
+               <a [routerLink]="['operation']" ><span class="fa fa-cogs"></span> <span class="xn-text">Normal Operation</span></a>
            </li>                    
            <li>
-               <a [routerLink]="['cheque']" (click)="reload()"><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
+               <a [routerLink]="['cheque']" ><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
            </li>
            <li>
-               <a [routerLink]="['change']" (click)="reload()" ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Currency</span></a>
+               <a [routerLink]="['change']" ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Currency</span></a>
            </li>
    
            <li class="xn-title">Additional Services</li>
            <li>
-            <a><span class="fa fa-credit-card"></span> <span class="xn-text">Bank Card</span></a>                        
+            <a [routerLink]="['email/inbox']"><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service</span><div class="informer informer-warning">{{EmailStat.countReaden}}</div></a>                        
            </li>
            <li>
-            <a [routerLink]="['email']"><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service </span></a>                        
+               <a [routerLink]="['task']" ><span class="fa fa-table"></span> <span class="xn-text">Daily Task</span></a>                        
            </li>
            <li>
-               <a><span class="fa fa-table"></span> <span class="xn-text">Daily Task</span></a>                        
-           </li>
+                <a><span class="xn-text"></span></a>                        
+            </li>
    
        </ul>
        <!-- END X-NAVIGATION -->
@@ -97,7 +96,7 @@
                        <div class="panel-body list-group list-group-contacts scroll" style="height: 200px;">
                            <a class="list-group-item">
                                <div class="list-group-status status-online"></div>
-                               <img src="../../assets/images/users/user2.jpg" class="pull-left" alt="John Doe"/>
+                               <img src="../../assets/images/users/user2.jpg" class="pull-left"/>
                                <span class="contacts-title">John Doe</span>
                                <p>Praesent placerat tellus id augue condimentum</p>
                            </a>
@@ -150,3 +149,5 @@
        <!-- END PAGE CONTENT -->
        </div>
        <!-- END PAGE CONTAINER --> 
+
+       

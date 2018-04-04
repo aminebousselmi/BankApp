@@ -44,7 +44,6 @@ export class ChangeService {
     //-- END ADDING CURRENCY OPERATION
 
      //-- SECURING API DATA
-
      public authGet$(url) {
         let header = this.initAuthHeaders();
         let options = { headers: header };

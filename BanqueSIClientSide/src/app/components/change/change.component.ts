@@ -1,9 +1,8 @@
-import { Component,ViewContainerRef } from '@angular/core';
+import { Component,ViewContainerRef,OnInit,AfterViewInit } from '@angular/core';
 import {ChangeService} from '../service/change.service';
 import {AuthenticateService} from '../service/authenticate.service';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import {Chart} from 'chart.js';
-import {AngularFireDatabase,AngularFireList} from 'angularfire2/database';
+import {AngularFireDatabase} from 'angularfire2/database';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { AmChartsService, AmChart } from "@amcharts/amcharts3-angular";
@@ -13,20 +12,14 @@ import { AmChartsService, AmChart } from "@amcharts/amcharts3-angular";
   selector: 'change',
   templateUrl: 'change.component.html'
 })
-export class  ChangeComponent{
-
+export class  ChangeComponent implements OnInit,AfterViewInit {
     //--ATTRBIUTS
-    chart = [];
-    chartCurrency = [];
-    satisticalArrayF = [];
-
     Employe : {codePersonne : null,agence: {codeAgence:0}};
     From = 'TND';
     To = 'EUR';
     Amount = 1;
     AmountConverted = 0;
     dataCurrency = [
-
         {code:'AED', name:'United Arab Emirates Dirham'},
         {code : 'AFN', name: 'Afghan Afghani'},
         {code : 'ALL', name: 'Albanian Lek'},
@@ -200,7 +193,7 @@ export class  ChangeComponent{
     To_Currency_Code = null;
     To_Currency_Name = null;
     Exchange_Rate = null;
-    SelectedTypeChange = 1;
+    SelectedTypeChange = 0;
     SelectedCodeChange = null;
     Change = {
               Identif:null,
@@ -218,12 +211,12 @@ export class  ChangeComponent{
               ChangeType :0,
               CodeEmploye:0
             };
-        montant = 0;
+       
         ChangeTable = [];
         chartChangeD : AmChart;
     //-- END ATTRIBUTS
 
-    //-- CONSTRUCTOR
+  //-- CONSTRUCTOR
   constructor( 
       private chService: ChangeService,
       private authService: AuthenticateService,
@@ -233,12 +226,47 @@ export class  ChangeComponent{
       private spinnerService: Ng4LoadingSpinnerService,
       private vcr: ViewContainerRef,
       private AmCh: AmChartsService
-  ) {
+  ) { 
     this.toastr.setRootViewContainerRef(vcr);
     this.spinnerService.show();
   }
   //-- END CONSTRUCTOR
 
+  async ngAfterViewInit() {
+    await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
+    await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
+    await this.loadScript("../../../assets/js/plugins/icheck/icheck.min.js");
+    await this.loadScript("../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
+    await this.loadScript("../../../assets/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js");
+    await this.loadScript("../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
+    await this.loadScript("../../../assets/js/plugins/rickshaw/d3.v3.js");
+    await this.loadScript("../../../assets/js/plugins/rickshaw/rickshaw.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-timepicker.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-colorpicker.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-file-input.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-select.js");
+    await this.loadScript("../../../assets/js/plugins/tagsinput/jquery.tagsinput.min.js");
+    await this.loadScript("../../../assets/js/plugins/owl/owl.carousel.min.js");
+    await this.loadScript("../../../assets/js/plugins/knob/jquery.knob.min.js");
+    await this.loadScript("../../../assets/js/plugins/moment.min.js");
+    await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
+    await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
+    await this.loadScript("../../../assets/js/plugins.js");
+    await this.loadScript("../../../assets/js/actions.js");
+    await this.loadScript("../../../assets/js/demo_dashboard.js");
+
+  }
+  private loadScript(scriptUrl: string) {
+    return new Promise((resolve, reject) => {
+      const scriptElement = document.createElement('script')
+      scriptElement.src = scriptUrl
+      scriptElement.onload = resolve
+      document.body.appendChild(scriptElement)
+    })
+  }
+  
       //-- INITIALIZING EMPLOYE DATA
       ngOnInit() {
         this.authService.getUsernameInfo$().subscribe(
@@ -278,25 +306,27 @@ export class  ChangeComponent{
       .open().result.then((dialog: any) => 
       {
           this.Change.CodeEmploye = this.Employe.codePersonne;
-          console.log(this.Change);
           this.chService.AddDeviseOperation(this.Change).subscribe(
               data => {
-                  console.log(data);
                   if(data.idChange == 0){
                     this.showError(data.messageResult);
                   }else{
                     this.showValid(data.messageResult);
+                    this.GetListChange();
                   }
               }
           )
       })
       .catch((err: any) => {
-          this.showError("Transaction Annulée");
+          this.showError("Transaction Canceled");
       });
     }
     //-- END ADD CHANGE OPERATION
     GetAmountConverted(MontantC){
-      if(this.SelectedTypeChange == 0){
+      if(MontantC == null || MontantC <= 0 || this.SelectedCodeChange == null){
+          this.showError("Make sure all Fields are not empty !");
+      }else{
+      if(this.SelectedTypeChange == 1){
         this.chService.ConvertisseurDevise("TND",this.SelectedCodeChange).subscribe(
           res => {
               this.Change.ChangeType = 1;
@@ -306,6 +336,7 @@ export class  ChangeComponent{
               this.Change.ToCurrencyName = res["Realtime Currency Exchange Rate"]["4. To_Currency Name"];
               this.Change.ExchangeRate = res["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
               this.Change.MontantConverted = parseFloat(res["Realtime Currency Exchange Rate"]["5. Exchange Rate"])*MontantC;
+              
           }
         )
       }else{
@@ -318,13 +349,23 @@ export class  ChangeComponent{
               this.Change.ToCurrencyName = res["Realtime Currency Exchange Rate"]["4. To_Currency Name"];
               this.Change.ExchangeRate = res["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
               this.Change.MontantConverted = parseFloat(res["Realtime Currency Exchange Rate"]["5. Exchange Rate"])*MontantC;
+              this.Change.AdresseP = null;
+              this.Change.Destination = null;
+              
           }
         )
       }
     }
-    
+    }
+   
+    handleAddressChange(address) {
+      this.Change.Destination = address.formatted_address;
+    }
     //-- CONVERTING CURRENCY
     ConvertDevise(){
+      if(this.Amount <= 0 || this.Amount == null){
+        this.showError("Empty Amount !");
+      }else{
         this.chService.ConvertisseurDevise(this.From,this.To).subscribe(
             res => {
                 this.From_Currency_Code = res["Realtime Currency Exchange Rate"]["1. From_Currency Code"];
@@ -363,9 +404,19 @@ export class  ChangeComponent{
                 });
         });
 
-       
+      }
     }
     //-- END CONVERTING CURRENCY
+
+    _keyPress(event: any) {
+      const pattern = /[a-z\A-Z\ \é\è]/;
+      let inputChar = String.fromCharCode(event.charCode);
+  
+      if (!pattern.test(inputChar)) {
+        // invalid character, prevent input
+        event.preventDefault();
+      }
+    }
 
    
   //-- PUSHING DATA INTO FIREBASE
@@ -390,8 +441,6 @@ export class  ChangeComponent{
                   snapshot.forEach(function(childSnapshot) {
                       var item = childSnapshot.val();
                       item.key = childSnapshot.key;
-                      //returnArrDate.push(item.date);
-                      //returnArrRate.push(item.rate);
 
                       chartData.push( {
                         "date": item.date,

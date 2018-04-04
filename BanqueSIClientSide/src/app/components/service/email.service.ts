@@ -15,14 +15,66 @@ export class EmailService {
     constructor(private http: HttpClient,private jwtHelper: JwtHelper){
     }
 
-      //-- SECURING API DATA
-      public authGet$(url) {
+    DeleteEmail(idEmail){
+        return this.authGet$(`http://localhost:44365/api/DeleteEmail/`+idEmail)  
+    }
+
+    GetStatisticalMail(idEmploye){
+        return this.authGet$(`http://localhost:44365/api/MailStatisticalMail/`+idEmploye)
+    }
+
+    SetEmailReaden(idEmail){
+        return this.authGet$(`http://localhost:44365/api/ReadenMail/`+idEmail)
+    }
+    GetEmailDraftList(From,idPersonne){
+        return this.authGet$(`http://localhost:44365/api/GetEmailDraftList/`+From+"/"+idPersonne)
+    }
+
+    DraftEmail(body){
+        return this.authPost$(`http://localhost:44365/api/DraftEmail`,body);
+    }
+
+    DeleteEmailSpam(idEmail){
+        return this.authGet$(`http://localhost:44365/api/DeleteEmailSpam/`+idEmail)
+    }
+
+    GetEmailDeletedList(idPersonne){
+        return this.authGet$(`http://localhost:44365/api/GetEmailDeletedList/`+idPersonne)
+    }
+
+    GetEmailList(To,idPersonne) {
+        return this.authGet$(`http://localhost:44365/api/ListEmail/`+To+"/"+idPersonne)
+    }
+
+    GetEmailSentList(From,idPersonne) {
+        return this.authGet$(`http://localhost:44365/api/ListEmailFrom/`+From+"/"+idPersonne)
+    }
+
+    SentEmail(body){
+        return this.authPost$(`http://localhost:44365/api/SentEmail`,body);
+    }
+
+    SendingDraftEmail(body){
+        return this.authPost$(`http://localhost:44365/api/SendingDraftEmail`,body)
+    }
+
+    //-- SECURING API DATA
+    public authGet$(url) {
         let header = this.initAuthHeaders();
         let options = { headers: header };
         return this.http.get<any>(url, options).pipe(
             debounceTime(200),
             distinctUntilChanged(),
             catchError(this.handleError<any>("authGet")));
+    }
+
+    public authPost$(url: string, body: any) {
+        let headers = this.initAuthHeaders();
+        return this.http.post<any>(url, body, { headers: headers }).pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            catchError(this.handleError("authPost"))
+        )
     }
 
     private getLocalToken(): string {

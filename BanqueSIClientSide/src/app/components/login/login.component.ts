@@ -34,7 +34,7 @@ export class LoginComponent implements OnDestroy {
             result => {
                 if (result.state == 1) {
                     this.showValid(result.msg);
-                    window.location.reload();
+                    
             
                 } else {
                     this.showError(result.msg);

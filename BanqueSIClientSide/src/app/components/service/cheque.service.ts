@@ -9,32 +9,42 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable()
 export class ChequeService {
-    
-    private tokeyKey = "token";
-    constructor(private http: HttpClient,private jwtHelper: JwtHelper){}
 
+    constructor(private http: HttpClient,
+                private jwtHelper: JwtHelper
+                ){}
+    
+    //-- VERSEMENT CHEQUE
     VersementCheque(body) {
         return this.authPost$(`http://localhost:44365/api/VersementCheque`,body);
     }
+    //-- END VERSEMENT CHEQUE
 
+    //-- GET LIST ACCOUNT BY AGENCY
     GetListAccountByAgency(idAgence) {
         return this.authGet$(`http://localhost:44365/api/GetListAccountByAgency/`+idAgence);
     }
+    //-- END GET LIST ACCOUNT BY AGENCY
 
+    //-- GET LIST CHECK BY PERSON
     GetListCheckByPerson(idEmploye) {
         return this.authGet$(`http://localhost:44365/api/GetListCheckByEmploye/`+idEmploye);
     }
+    //-- END GET LIST CHECK BY PERSON
 
+    //-- GET STATISTICAL CHECK FOR CHART
     GetStatisticalCheckChart(idEmploye) {
         return this.authGet$(`http://localhost:44365/api/GetStatisticalCheckOperationsByEmploye/`+idEmploye);
     }
+    //-- END GET STATISTICAL CHECK FOR CHART
 
+    //-- GET STATISTICAL CHECK LINE
     GetStatisticalCheckLine(idEmploye) {
         return this.authGet$(`http://localhost:44365/api/GetStatisticalLineCheckByEmploye/`+idEmploye);
     }
+    //-- END GET STATISTICAL CHECK LINE
 
     //-- SECURING API DATA
-
     public authGet$(url) {
         let header = this.initAuthHeaders();
         let options = { headers: header };
@@ -54,7 +64,7 @@ export class ChequeService {
     }
 
     private getLocalToken(): string {
-        return sessionStorage.getItem(this.tokeyKey);
+        return sessionStorage.getItem("token");
     }
 
     private initAuthHeaders(): HttpHeaders {

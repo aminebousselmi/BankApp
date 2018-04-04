@@ -1,44 +1,36 @@
-import { Component,OnInit,AfterViewInit } from '@angular/core';
+import { Component,OnInit,AfterViewInit} from '@angular/core';
+import {Router,NavigationEnd} from '@angular/router';
 import {AuthenticateService} from '../service/authenticate.service';
-import {EmailService} from '../service/email.service';
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
-import { Overlay } from 'ngx-modialog';
-import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import * as _ from 'underscore';
 
 @Component({
   moduleId: module.id,
-  selector: 'email',
-  templateUrl: 'email.component.html'
+  selector: 'task',
+  templateUrl: 'tache.component.html'
 })
-export class EmailComponent implements OnInit,AfterViewInit {
+export class TacheComponent implements OnInit,AfterViewInit {
 
-    //-- ATTRIBUTS
-    Employe = {codePersonne : null,agence: {codeAgence:0}};
-    EmailStat = {};
+  //--ATTRIBUTS
+  Employe = {codePersonne : null,agence: {codeAgence:0}};
+  //-- END ATTRIBUTS
 
-    //-- CONSTRUCTOR && INJECTING SERVICES 
-    constructor(
-        private authService: AuthenticateService,
-        private emailService : EmailService,
-        private spinnerService: Ng4LoadingSpinnerService,
-        private modal: Modal
-    ){
-    //this.spinnerService.show();
+  //-- CONSTRUCTOR && INJECTING SERVICES 
+  constructor (private authService: AuthenticateService,
+               private router: Router
+              ){
+               
   }
   //-- END CONSTRUCTOR && INJECTING SERVICES 
 
   //-- METHODES
- 
-
-  //-- INITIALIZING FUNCTIONS
+  
+  //-- INITIALIZING EMPLOYE DATA
   ngOnInit() {
+
     this.authService.getUsernameInfo$().subscribe(
         res => {
           this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
-                  this.GetEmailStat();
               }
           );
         });
@@ -67,7 +59,7 @@ export class EmailComponent implements OnInit,AfterViewInit {
     await this.loadScript("../../../assets/js/plugins.js");
     await this.loadScript("../../../assets/js/actions.js");
     await this.loadScript("../../../assets/js/demo_dashboard.js");
-
+  
   }
   private loadScript(scriptUrl: string) {
     return new Promise((resolve, reject) => {
@@ -77,18 +69,10 @@ export class EmailComponent implements OnInit,AfterViewInit {
       document.body.appendChild(scriptElement)
     })
   }
-  //-- END INITIALIZING FUNCTIONS
+  //-- END INITIALIZING EMPLOYE DATA
 
-
-
-
-  GetEmailStat(){
-    this.emailService.GetStatisticalMail(this.Employe.codePersonne).subscribe(
-      res => {
-        this.EmailStat = res;
-      }
-    )
+  BackDash(){
+    this.router.navigate(['stb/dashboard']);
   }
-
   //-- END METHODES
 }

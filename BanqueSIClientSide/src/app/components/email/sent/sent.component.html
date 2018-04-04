@@ -1,0 +1,38 @@
+        <!-- END CONTENT FRAME LEFT -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            </div>
+            <div class="panel-body mail" >
+                
+                <div class="mail-item mail-unread mail-info" *ngFor="let email of pagedItems">                                    
+                    <div class="mail-star">
+                        <span class="fa fa-star-o"></span>
+                    </div>
+                   
+                    <div class="mail-user">{{email.nomPersonne}}</div>                                    
+                    <a id="emailDetailed" (click)="GoBack(email)" class="mail-text"> {{email.objectEmail}}</a>                              
+                    <div class="mail-date">{{email.dateEmail}}</div>
+                </div>                             
+                
+            </div>
+            <div class="panel-footer"> 
+                <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                        <a (click)="setPage(1)">First</a>
+                    </li>
+                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                    </li>
+                    <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                        <a (click)="setPage(page)">{{page}}</a>
+                    </li>
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                    </li>
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                        <a (click)="setPage(pager.totalPages)">Last</a>
+                    </li>
+                </ul>
+            </div>                            
+        </div>
+    <!-- END CONTENT FRAME BODY -->

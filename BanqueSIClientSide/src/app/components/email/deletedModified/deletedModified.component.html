@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <img src="../../../../assets/img/amine.png" class="panel-title-image"/>
+                    <h3 class="panel-title">{{nomPersonne}} <small>{{from}}</small></h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default" (click)="GoBack()"><span class="fa fa-mail-reply"></span></button>
+                    <button class="btn btn-default" (click)="delete()"><span class="fa fa-trash-o"></span></button>                                    
+                </div>
+            </div>
+            <div class="panel-body">
+                <h3>{{objectEmail}}<small class="pull-right text-muted"><span class="fa fa-clock-o"></span> {{dateEmail}}</small></h3>
+                <div [innerHTML]="messageEmail"></div>
+               
+            </div>
+           
+</div>

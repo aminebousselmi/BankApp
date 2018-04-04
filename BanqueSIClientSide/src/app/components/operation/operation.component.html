@@ -151,7 +151,7 @@
                                 <div class="panel-body list-group">
                                     <a class="list-group-item"><span class="fa fa-inbox"></span> Account Number <span class="badge badge-danger">{{compte.codeCompte}}</span></a>
                                     <a class="list-group-item"><span class="fa fa-calendar"></span> Creation Date <span class="badge badge-danger">{{compte.dateCreation}}</span></a>                                
-                                    <a class="list-group-item"><span class="fa fa-money"></span> Amount <span class="badge badge-danger">{{compte.solde}} $</span></a>
+                                    <a class="list-group-item"><span class="fa fa-money"></span> Balance <span class="badge badge-danger">{{compte.solde}} $</span></a>
                                     <a class="list-group-item" *ngIf="compte.taux != null"><span class="fa fa-money"></span> Discovery <span class="badge badge-danger">{{compte.taux}} $</span></a>
                                     <a class="list-group-item" *ngIf="compte.taux == null"><span class="fa fa-money"></span> Rate <span class="badge badge-danger">{{compte.decouvert}} $</span></a>
                                 </div>

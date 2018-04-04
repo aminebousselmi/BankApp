@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit,AfterViewInit } from '@angular/core';
 import {AuthenticateService} from '../service/authenticate.service';
 import {DashboardService} from '../service/dashboard.service';
 import {Chart} from 'chart.js';
@@ -13,7 +13,7 @@ import { AmChartsService, AmChart } from "@amcharts/amcharts3-angular";
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html'
 })
-export class DashboardComponent implements OnInit  {
+export class DashboardComponent implements OnInit,AfterViewInit{
 
   //-- ATTRIBUTS
   Employe = {codePersonne : null,agence: {codeAgence:0}};
@@ -26,7 +26,6 @@ export class DashboardComponent implements OnInit  {
   montantV = [];
   alldates = [];
   operations = [];
-  AccountList = [];
   chartChange: AmChart;
   chartChangeSell : AmChart;
   chartChangeDetailed : AmChart;
@@ -35,11 +34,8 @@ export class DashboardComponent implements OnInit  {
   TotalChange = 0;
   valueInterval = 0;
   EndValue = 0;
-
   chartData1 = [];
   chartData2 = [];
-  chartData3 = [];
-  chartData4 = [];
   //-- END ATTRIBUTS
 
   //-- CONSTRUCTOR && INJECTING SERVICES 
@@ -70,18 +66,51 @@ export class DashboardComponent implements OnInit  {
                   this.GetOperationsByEmp();
                   this.GetCountAccountByAgenc();
                   this.GeClientStatisByAgence();
-
               }
           );
         });
   }
   //-- END INITIALIZING FUNCTIONS
 
-  CreateDetailedChartChange(){
+  async ngAfterViewInit() {
+    await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
+    await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
+    await this.loadScript("../../../assets/js/plugins/icheck/icheck.min.js");
+    await this.loadScript("../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
+    await this.loadScript("../../../assets/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js");
+    await this.loadScript("../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
+    await this.loadScript("../../../assets/js/plugins/rickshaw/d3.v3.js");
+    await this.loadScript("../../../assets/js/plugins/rickshaw/rickshaw.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-timepicker.min.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-colorpicker.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-file-input.js");
+    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-select.js");
+    await this.loadScript("../../../assets/js/plugins/tagsinput/jquery.tagsinput.min.js");
+    await this.loadScript("../../../assets/js/plugins/owl/owl.carousel.min.js");
+    await this.loadScript("../../../assets/js/plugins/knob/jquery.knob.min.js");
+    await this.loadScript("../../../assets/js/plugins/moment.min.js");
+    await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
+    await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
+    await this.loadScript("../../../assets/js/plugins.js");
+    await this.loadScript("../../../assets/js/actions.js");
+    await this.loadScript("../../../assets/js/demo_dashboard.js");
 
+  }
+  private loadScript(scriptUrl: string) {
+    return new Promise((resolve, reject) => {
+      const scriptElement = document.createElement('script')
+      scriptElement.src = scriptUrl
+      scriptElement.onload = resolve
+      document.body.appendChild(scriptElement)
+    })
+  }
+
+  //-- Create Detailed Chart Change
+  CreateDetailedChartChange(){
     this.dashService.GetDetailedStatisticalChartByIdEmploye(this.Employe.codePersonne).subscribe(
       res => {
-        console.log(res);
           for ( var i = 0; i < res[0]['dateChange'].length; i++ ) {
             this.chartData1.push( {
               "date": res[0]['dateChange'][i],
@@ -197,102 +226,82 @@ export class DashboardComponent implements OnInit  {
               "enabled": true
             }
           } );
-
-          console.log(this.chartData1);
-          console.log(this.chartData2);
       }
     );
   }
+  //-- END Create Detailed Chart Change
 
+  //-- Create Chart Change
   CreateChartChange(){
     this.dashService.GetTotalBuyDeviseByEmploye(this.Employe.codePersonne).subscribe(
         res => {
-          this.TotalBuy = Math.ceil(res);
-          this.TotalChange += this.TotalBuy;
-
-          this.dashService.GetTotalSellDeviseByEmploye(this.Employe.codePersonne).subscribe(
-            res => {
-              this.TotalSell = Math.ceil(res);
-              this.TotalChange += this.TotalSell;
-              
-              this.TotalChange = Math.ceil(this.TotalChange);
-              this.valueInterval = Math.ceil(this.TotalChange/11);
-              this.EndValue = Math.ceil(this.TotalChange/2);
-
-              this.setChartSell(this.TotalSell,this.TotalChange,this.valueInterval,this.EndValue);
-              this.setChartBuy(this.TotalBuy,this.TotalChange,this.valueInterval,this.EndValue);
+          
+          this.chartChangeSell =  this.AmCharts.makeChart( "chartdivSell", {
+            "type": "gauge",
+            "theme": "light",
+            "axes": [ {
+              "axisThickness": 1,
+              "axisAlpha": 0.2,
+              "tickAlpha": 0.2,
+              "valueInterval":  Math.ceil(res.totalBuyAndSell/11),
+              "bands": [ {
+                "color": "#84b761",
+                "endValue":  Math.ceil(res.totalBuyAndSell/2),
+                "startValue":  0
+              }, 
+              {
+                "color": "#cc4748",
+                "endValue": Math.ceil(res.totalBuyAndSell),
+                "innerRadius": "95%",
+                "startValue": Math.ceil(res.totalBuyAndSell/2)
+              } ],
+              "bottomText": "0 TND",
+              "bottomTextYOffset": -20,
+              "endValue": Math.ceil(res.totalBuyAndSell)
+            } ],
+            "arrows": [ {} ],
+            "export": {
+              "enabled": true
             }
-          )
+          });
+          this.chartChangeSell.arrows[ 0 ].setValue(Math.ceil(res.totalSell));
+          this.chartChangeSell.axes[ 0 ].setBottomText(Math.ceil(res.totalSell) + " TND" );
+          
+          this.chartChange =  this.AmCharts.makeChart( "chartdiv", {
+            "type": "gauge",
+            "theme": "light",
+            "axes": [ {
+              "axisThickness": 1,
+              "axisAlpha": 0.2,
+              "tickAlpha": 0.2,
+              "valueInterval": Math.ceil(res.totalBuyAndSell/11),
+              "bands": [ {
+                "color": "#84b761",
+                "endValue":  Math.ceil(res.totalBuyAndSell/2),
+                "startValue":  0
+              }, 
+              {
+                "color": "#cc4748",
+                "endValue": Math.ceil(res.totalBuyAndSell),
+                "innerRadius": "95%",
+                "startValue": Math.ceil(res.totalBuyAndSell/2)
+              } ],
+              "bottomText": "0 TND",
+              "bottomTextYOffset": -20,
+              "endValue": Math.ceil(res.totalBuyAndSell)
+            } ],
+            "arrows": [ {} ],
+            "export": {
+              "enabled": true
+            }
+          });
+          this.chartChange.arrows[ 0 ].setValue(Math.ceil(res.totalBuy));
+          this.chartChange.axes[ 0 ].setBottomText(Math.ceil(res.totalBuy) + " TND" );
         }
     )
-   
   }
-  setChartSell(TotalSell,TotalChange,ValueInterval,EndValue){
-    
-    this.chartChangeSell =  this.AmCharts.makeChart( "chartdivSell", {
-      "type": "gauge",
-      "theme": "light",
-      "axes": [ {
-        "axisThickness": 1,
-        "axisAlpha": 0.2,
-        "tickAlpha": 0.2,
-        "valueInterval": ValueInterval,
-        "bands": [ {
-          "color": "#84b761",
-          "endValue":  EndValue,
-          "startValue":  0
-        }, 
-        {
-          "color": "#cc4748",
-          "endValue": TotalChange,
-          "innerRadius": "95%",
-          "startValue": EndValue
-        } ],
-        "bottomText": "0 TND",
-        "bottomTextYOffset": -20,
-        "endValue": TotalChange
-      } ],
-      "arrows": [ {} ],
-      "export": {
-        "enabled": true
-      }
-    });
-    this.chartChangeSell.arrows[ 0 ].setValue(TotalSell);
-    this.chartChangeSell.axes[ 0 ].setBottomText(TotalSell + " TND" );
-  }
+  //-- END Create Chart Change
 
-  setChartBuy(TotalBuy,TotalChange,ValueInterval,EndValue){
-    this.chartChange =  this.AmCharts.makeChart( "chartdiv", {
-      "type": "gauge",
-      "theme": "light",
-      "axes": [ {
-        "axisThickness": 1,
-        "axisAlpha": 0.2,
-        "tickAlpha": 0.2,
-        "valueInterval": ValueInterval,
-        "bands": [ {
-          "color": "#84b761",
-          "endValue":  EndValue,
-          "startValue":  0
-        }, 
-        {
-          "color": "#cc4748",
-          "endValue": TotalChange,
-          "innerRadius": "95%",
-          "startValue": EndValue
-        } ],
-        "bottomText": "0 TND",
-        "bottomTextYOffset": -20,
-        "endValue": TotalChange
-      } ],
-      "arrows": [ {} ],
-      "export": {
-        "enabled": true
-      }
-    });
-    this.chartChange.arrows[ 0 ].setValue(TotalBuy);
-    this.chartChange.axes[ 0 ].setBottomText(TotalBuy + " TND" );
-  }
   //-- GETTING PAYMENT BY EMPLOYE
   GetCountVersementByEmp(){
     this.dashService.GetCountVersementByEmploye(this.Employe.codePersonne).subscribe(
@@ -374,7 +383,6 @@ export class DashboardComponent implements OnInit  {
                 }]
               }
             }
-
         });
         //-- END CREATING CHART DRAW TO ANALYZE OPERATIONS 
         this.spinnerService.hide();
@@ -392,10 +400,10 @@ export class DashboardComponent implements OnInit  {
           this.CountAccount = data;
         }
       );
-    
     }
   //-- END GETTING OPERATION BY EMPLOYE TO ANALYTIC USING CHART.JS
-
+  
+  //-- GET CLIENT STATISTICAL BY AGENCY
   GeClientStatisByAgence(){
     this.dashService.GetCountCustomerByAgency(this.Employe.agence.codeAgence).subscribe(
       data => 
@@ -404,7 +412,6 @@ export class DashboardComponent implements OnInit  {
       }
     );
   }
-
- 
+  //-- END GET CLIENT STATISTICAL BY AGENCY
   //-- END METHODES
 }
