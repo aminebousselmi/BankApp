@@ -12,8 +12,7 @@ namespace BanqueSI.Repository.IRepository
         Change AchatVenteDevise(ChangeDTO c);
         List<ChangeDTO> GetListChangesByEmploye(int idEmploye);
         List<ChangeDetailedStatDTO> GetDetailedStatisticalChartByIdEmploye(int idEmploye);
-        double TotalSellDeviseByEmploye(int idEmploye);
-        double TotalBuyDeviseByEmploye(int idEmploye);
+        TotalBuySellDTO TotalBuySellDeviseByEmploye(int idEmploye);
         void Save();
     }
 }

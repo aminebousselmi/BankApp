@@ -13,9 +13,10 @@ using System;
 namespace BanqueSI.Migrations
 {
     [DbContext(typeof(STBDbContext))]
-    partial class STBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180331142107_STBDBV9")]
+    partial class STBDBV9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +43,38 @@ namespace BanqueSI.Migrations
                     b.ToTable("Agence");
                 });
 
+            modelBuilder.Entity("BanqueSI.Model.Entities.CarteBancaire", b =>
+                {
+                    b.Property<int>("IdCarte")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CIN");
+
+                    b.Property<string>("CompteCodeCompte");
+
+                    b.Property<DateTime>("DateCreation");
+
+                    b.Property<DateTime>("DateExpiration");
+
+                    b.Property<string>("NomProprietaire");
+
+                    b.Property<int>("NumeroCarte");
+
+                    b.Property<string>("PrenomProprietaire");
+
+                    b.Property<int>("SecretPassword");
+
+                    b.Property<int>("TeleProprietaire");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("IdCarte");
+
+                    b.HasIndex("CompteCodeCompte");
+
+                    b.ToTable("CarteBancaire");
+                });
+
             modelBuilder.Entity("BanqueSI.Model.Entities.Change", b =>
                 {
                     b.Property<int>("IdChange")
@@ -61,18 +94,15 @@ namespace BanqueSI.Migrations
 
                     b.Property<string>("FromCurrencyName");
 
-                    b.Property<string>("Identif")
-                        .HasMaxLength(8);
+                    b.Property<string>("Identif");
 
                     b.Property<double>("Montant");
 
                     b.Property<double>("MontantConverted");
 
-                    b.Property<string>("NomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("NomP");
 
-                    b.Property<string>("PrenomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("PrenomP");
 
                     b.Property<string>("ToCurrencyCode");
 
@@ -156,6 +186,8 @@ namespace BanqueSI.Migrations
                     b.Property<int>("IdEmail")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CCEmail");
+
                     b.Property<DateTime>("DateEmail");
 
                     b.Property<bool>("Deleted");
@@ -167,8 +199,6 @@ namespace BanqueSI.Migrations
                     b.Property<string>("ObjectEmail");
 
                     b.Property<int?>("PersonneCodePersonne");
-
-                    b.Property<bool>("Readen");
 
                     b.Property<bool>("Sent");
 
@@ -253,6 +283,13 @@ namespace BanqueSI.Migrations
                     b.ToTable("Employe");
 
                     b.HasDiscriminator().HasValue("Employe");
+                });
+
+            modelBuilder.Entity("BanqueSI.Model.Entities.CarteBancaire", b =>
+                {
+                    b.HasOne("BanqueSI.Model.Entities.Compte", "Compte")
+                        .WithMany("CarteBancaires")
+                        .HasForeignKey("CompteCodeCompte");
                 });
 
             modelBuilder.Entity("BanqueSI.Model.Entities.Change", b =>

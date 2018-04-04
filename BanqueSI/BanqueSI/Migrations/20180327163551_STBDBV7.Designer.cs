@@ -13,9 +13,10 @@ using System;
 namespace BanqueSI.Migrations
 {
     [DbContext(typeof(STBDbContext))]
-    partial class STBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180327163551_STBDBV7")]
+    partial class STBDBV7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,18 +62,15 @@ namespace BanqueSI.Migrations
 
                     b.Property<string>("FromCurrencyName");
 
-                    b.Property<string>("Identif")
-                        .HasMaxLength(8);
+                    b.Property<string>("Identif");
 
                     b.Property<double>("Montant");
 
                     b.Property<double>("MontantConverted");
 
-                    b.Property<string>("NomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("NomP");
 
-                    b.Property<string>("PrenomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("PrenomP");
 
                     b.Property<string>("ToCurrencyCode");
 
@@ -156,6 +154,8 @@ namespace BanqueSI.Migrations
                     b.Property<int>("IdEmail")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CCEmail");
+
                     b.Property<DateTime>("DateEmail");
 
                     b.Property<bool>("Deleted");
@@ -167,8 +167,6 @@ namespace BanqueSI.Migrations
                     b.Property<string>("ObjectEmail");
 
                     b.Property<int?>("PersonneCodePersonne");
-
-                    b.Property<bool>("Readen");
 
                     b.Property<bool>("Sent");
 
@@ -291,7 +289,7 @@ namespace BanqueSI.Migrations
             modelBuilder.Entity("BanqueSI.Model.Entities.Mail", b =>
                 {
                     b.HasOne("BanqueSI.Model.Entities.Personne", "Personne")
-                        .WithMany("Mail")
+                        .WithMany()
                         .HasForeignKey("PersonneCodePersonne");
                 });
 

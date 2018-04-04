@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Include;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading.Tasks;
 using BanqueSI.Model;
 using BanqueSI.Model.DTO;
 using BanqueSI.Model.Entities;
@@ -26,19 +25,19 @@ namespace BanqueSI.Repository
         //-- METHODES
 
         //-- GET STATISTICAL CHECK OPERATIONS BY EMPLOYE
-        public StatisticalCheckOperations GetStatisticalCheckOperationsByEmploye(int idEmploye)
+        public StatisticalCheckOperationsDTO GetStatisticalCheckOperationsByEmploye(int idEmploye)
         {
             //-- ENTRIES
             Double SumAmountCheck = 0;
             Double MinAmountCheck = 0;
             Double MaxAmountCheck = 0;
             Double AverageAmountCheck = 0;
-        //-- END ENTRIES
+            //-- END ENTRIES
 
-        List<Cheque> cheques = _context
-                                        .Cheques
-                                        .Where(c => c.Employe.CodePersonne == idEmploye)
-                                        .ToList();
+            List<Cheque> cheques = _context
+                                            .Cheques
+                                            .Where(c => c.Employe.CodePersonne == idEmploye)
+                                            .ToList();
 
             foreach (Cheque cheque in cheques)
             {
@@ -68,7 +67,7 @@ namespace BanqueSI.Repository
                 //-- END Max
             }
 
-            StatisticalCheckOperations statisticalCheckOperations = new StatisticalCheckOperations();
+            StatisticalCheckOperationsDTO statisticalCheckOperations = new StatisticalCheckOperationsDTO();
             statisticalCheckOperations.MinPercentageAmountCheck = (MinAmountCheck*100) /SumAmountCheck;
             statisticalCheckOperations.AveragePercentageAmountCheck = (AverageAmountCheck* 100) / SumAmountCheck;
             statisticalCheckOperations.MaxPercentageAmountCheck = (MaxAmountCheck * 100) / SumAmountCheck;
@@ -135,22 +134,36 @@ namespace BanqueSI.Repository
         //-- END GET STATISTICAL LINE CHECK
 
         //-- GET LIST CHECK BY EMPLOYE
-        public List<Cheque> GetListCheckByEmploye(int idEmploye)
+        public List<PaymentCheckDTO> GetListCheckByEmploye(int idEmploye)
         {
-            return _context
-                        .Cheques
-                        .Where(c => c.Employe.CodePersonne == idEmploye)
-                        //.Include(c => c.Compte)
-                        .ToList();
+               List<PaymentCheckDTO> paymentsChequeDTO = new List<PaymentCheckDTO>();
+               foreach (Cheque cheque in  _context
+                                        .Cheques
+                                        .Include(c => c.Compte)
+                                        .Where(c => c.Employe.CodePersonne == idEmploye)
+                                        .ToList())
+               {
+                    PaymentCheckDTO paymentCheckDTO = new PaymentCheckDTO();
+                    paymentCheckDTO.BankName = cheque.BankName;
+                    paymentCheckDTO.CINProprietaire = cheque.CINProprietaire;
+                    paymentCheckDTO.DateV = cheque.DateV;
+                    paymentCheckDTO.IdC = cheque.idC;
+                    paymentCheckDTO.Montant = cheque.Montant;
+                    paymentCheckDTO.NomProprietaire = cheque.NomProprietaire;
+                    paymentCheckDTO.NumeroC = cheque.NumeroC;
+                    paymentCheckDTO.PrenomProprietaire = cheque.PrenomProprietaire;
+
+                    paymentCheckDTO.CodeCompte = _context.Comptes.Find(cheque.Compte.CodeCompte).CodeCompte;
+                    paymentCheckDTO.DateCreation = _context.Comptes.Find(cheque.Compte.CodeCompte).DateCreation;
+                    paymentCheckDTO.Decouvert = _context.Comptes.Find(cheque.Compte.CodeCompte).Decouvert;
+                    paymentCheckDTO.Solde = _context.Comptes.Find(cheque.Compte.CodeCompte).Solde;
+                    paymentCheckDTO.Taux = _context.Comptes.Find(cheque.Compte.CodeCompte).Taux;
+                    paymentCheckDTO.Type= _context.Comptes.Find(cheque.Compte.CodeCompte).Type;
+                paymentsChequeDTO.Add(paymentCheckDTO);
+            }
+            return paymentsChequeDTO;
         }
         //-- END GET LIST CHECK BY EMPLOYE
-
-        //-- GET Check By ID
-        public Cheque GetCheque(int idC)
-        {
-            return _context.Cheques.Find(idC);
-        }
-        //-- END GET CHECK BY ID
 
         //-- Payment Cheque Operation
         public Cheque VersementCheque(PaymentCheckDTO c)

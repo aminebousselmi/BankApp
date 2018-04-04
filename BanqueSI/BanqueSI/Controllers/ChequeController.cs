@@ -30,7 +30,7 @@ namespace BanqueSI.Controllers
         //-- APIS
 
         //-- SECURING API 
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         //-- GET LIST CHECK BY EMPLOYE
         [HttpGet("api/GetStatisticalLineCheckByEmploye/{idEmploye}")]
@@ -45,41 +45,19 @@ namespace BanqueSI.Controllers
         //-- END SECURING API 
         //-- GET LIST CHECK BY EMPLOYE
         [HttpGet("api/GetStatisticalCheckOperationsByEmploye/{idEmploye}")]
-        public StatisticalCheckOperations GetStatisticalCheckOperationsByEmploye(int idEmploye)
+        public StatisticalCheckOperationsDTO GetStatisticalCheckOperationsByEmploye(int idEmploye)
         {
             return _chequeRepository.GetStatisticalCheckOperationsByEmploye(idEmploye);
         }
 
         //-- SECURING API 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //-- END SECURING API 
         //-- GET LIST CHECK BY EMPLOYE
         [HttpGet("api/GetListCheckByEmploye/{idEmploye}")]
         public List<PaymentCheckDTO> GetListCheckByEmploye(int idEmploye)
         {
-            List<PaymentCheckDTO> paymentChecksDTO = new List<PaymentCheckDTO>();
-
-            foreach (Cheque check in _chequeRepository.GetListCheckByEmploye(idEmploye))
-            {
-                PaymentCheckDTO paymentCheckDTO = new PaymentCheckDTO();
-                paymentCheckDTO.BankName = check.BankName;
-                paymentCheckDTO.CINProprietaire = check.CINProprietaire;
-                paymentCheckDTO.DateV = check.DateV;
-                paymentCheckDTO.Montant = check.Montant;
-                paymentCheckDTO.NomProprietaire = check.NomProprietaire;
-                paymentCheckDTO.NumeroC = check.NumeroC;
-                paymentCheckDTO.PrenomProprietaire = check.PrenomProprietaire;
-
-                /*paymentCheckDTO.CodeCompte = check.Compte.CodeCompte;
-                paymentCheckDTO.DateCreation = check.Compte.DateCreation;
-                paymentCheckDTO.Decouvert = check.Compte.Decouvert;
-                paymentCheckDTO.Solde = check.Compte.Solde;
-                paymentCheckDTO.Type = check.Compte.Type;
-                paymentCheckDTO.Taux = check.Compte.Taux;*/
-                paymentChecksDTO.Add(paymentCheckDTO);
-            }
-
-            return paymentChecksDTO;
+            return _chequeRepository.GetListCheckByEmploye(idEmploye);
         }
         //-- GET LIST CHECK BY EMPLOYE
 
@@ -124,17 +102,6 @@ namespace BanqueSI.Controllers
             return paymentCheckDTO;
         }
         //-- END Payment Cheque Operation
-
-        //-- Get Check By ID
-        //-- SECURING API 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //-- END SECURING API 
-        [HttpGet("api/GetCheque/{idC}")]
-        public Cheque GetCheque(int idC)
-        {
-            return _chequeRepository.GetCheque(idC);
-        }
-        //-- END Get Check By ID
 
         //-- END API
     }

@@ -31,3 +31,14 @@ C:\Users\amino\Desktop\BanqueSISprint2\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0
 C:\Users\amino\Desktop\BanqueSISprint2\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.AssemblyInfo.cs
 C:\Users\amino\Desktop\BanqueSISprint2\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.dll
 C:\Users\amino\Desktop\BanqueSISprint2\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.pdb
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\bin\Debug\netcoreapp2.0\BanqueSI.deps.json
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\bin\Debug\netcoreapp2.0\BanqueSI.runtimeconfig.json
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\bin\Debug\netcoreapp2.0\BanqueSI.runtimeconfig.dev.json
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\bin\Debug\netcoreapp2.0\BanqueSI.dll
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\bin\Debug\netcoreapp2.0\BanqueSI.pdb
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.csprojResolveAssemblyReference.cache
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.csproj.CoreCompileInputs.cache
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.AssemblyInfoInputs.cache
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.AssemblyInfo.cs
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.dll
+C:\Users\amino\Desktop\BanqueSISprint3\BanqueSI\BanqueSI\obj\Debug\netcoreapp2.0\BanqueSI.pdb

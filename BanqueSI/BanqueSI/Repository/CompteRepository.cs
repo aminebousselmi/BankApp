@@ -1,5 +1,4 @@
-﻿using BanqueSI.DTO;
-using BanqueSI.Model;
+﻿using BanqueSI.Model;
 using BanqueSI.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -13,9 +13,10 @@ using System;
 namespace BanqueSI.Migrations
 {
     [DbContext(typeof(STBDbContext))]
-    partial class STBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180327142802_STBDBV2")]
+    partial class STBDBV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,18 +62,15 @@ namespace BanqueSI.Migrations
 
                     b.Property<string>("FromCurrencyName");
 
-                    b.Property<string>("Identif")
-                        .HasMaxLength(8);
+                    b.Property<string>("Identif");
 
                     b.Property<double>("Montant");
 
                     b.Property<double>("MontantConverted");
 
-                    b.Property<string>("NomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("NomP");
 
-                    b.Property<string>("PrenomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("PrenomP");
 
                     b.Property<string>("ToCurrencyCode");
 
@@ -153,8 +151,10 @@ namespace BanqueSI.Migrations
 
             modelBuilder.Entity("BanqueSI.Model.Entities.Mail", b =>
                 {
-                    b.Property<int>("IdEmail")
+                    b.Property<string>("IdEmail")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CCEmail");
 
                     b.Property<DateTime>("DateEmail");
 
@@ -166,17 +166,11 @@ namespace BanqueSI.Migrations
 
                     b.Property<string>("ObjectEmail");
 
-                    b.Property<int?>("PersonneCodePersonne");
-
-                    b.Property<bool>("Readen");
-
                     b.Property<bool>("Sent");
 
                     b.Property<string>("To");
 
                     b.HasKey("IdEmail");
-
-                    b.HasIndex("PersonneCodePersonne");
 
                     b.ToTable("Mail");
                 });
@@ -286,13 +280,6 @@ namespace BanqueSI.Migrations
                     b.HasOne("BanqueSI.Model.Entities.Client", "client")
                         .WithMany("Comptes")
                         .HasForeignKey("clientCodePersonne");
-                });
-
-            modelBuilder.Entity("BanqueSI.Model.Entities.Mail", b =>
-                {
-                    b.HasOne("BanqueSI.Model.Entities.Personne", "Personne")
-                        .WithMany("Mail")
-                        .HasForeignKey("PersonneCodePersonne");
                 });
 
             modelBuilder.Entity("BanqueSI.Model.Entities.Operation", b =>

@@ -43,6 +43,7 @@ namespace BanqueSI
             services.AddTransient<IOperationRepository, OperationRepository>();
             services.AddTransient<IClientRepository, ClientRepository>();
             services.AddTransient<IPersonneRepository, PersonneRepository>();
+            services.AddTransient<IEmailRepository, EmailRepository>();
             /*services.AddIdentity<Personne, IdentityRole>()
                 .AddEntityFrameworkStores<STBDbContext>()
                 .AddDefaultTokenProviders();*/

@@ -13,9 +13,10 @@ using System;
 namespace BanqueSI.Migrations
 {
     [DbContext(typeof(STBDbContext))]
-    partial class STBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180327145715_STBDBV3")]
+    partial class STBDBV3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,18 +62,15 @@ namespace BanqueSI.Migrations
 
                     b.Property<string>("FromCurrencyName");
 
-                    b.Property<string>("Identif")
-                        .HasMaxLength(8);
+                    b.Property<string>("Identif");
 
                     b.Property<double>("Montant");
 
                     b.Property<double>("MontantConverted");
 
-                    b.Property<string>("NomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("NomP");
 
-                    b.Property<string>("PrenomP")
-                        .HasMaxLength(30);
+                    b.Property<string>("PrenomP");
 
                     b.Property<string>("ToCurrencyCode");
 
@@ -153,8 +151,10 @@ namespace BanqueSI.Migrations
 
             modelBuilder.Entity("BanqueSI.Model.Entities.Mail", b =>
                 {
-                    b.Property<int>("IdEmail")
+                    b.Property<string>("IdEmail")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CCEmail");
 
                     b.Property<DateTime>("DateEmail");
 
@@ -167,8 +167,6 @@ namespace BanqueSI.Migrations
                     b.Property<string>("ObjectEmail");
 
                     b.Property<int?>("PersonneCodePersonne");
-
-                    b.Property<bool>("Readen");
 
                     b.Property<bool>("Sent");
 
