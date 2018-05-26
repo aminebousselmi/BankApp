@@ -1,0 +1,186 @@
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper" [ngClass]="
+    {
+        'defaultdark': color == 'defaultdark',
+        'greendark': color == 'greendark',
+        'reddark': color == 'reddark',
+        'bluedark': color == 'bluedark',
+        'purpledark': color == 'purpledark',
+        'megnadark': color == 'megnadark',
+        'default': color == 'default',
+        'green': color == 'green',
+        'red': color == 'red',
+        'blue': color == 'blue',
+        'purple': color == 'purple',
+        'megna': color == 'megna', 
+        'mini-sidebar': showMinisidebar,
+        'dark-theme': showDarktheme
+    }
+">
+    <!-- ============================================================== -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    
+    <ap-navigation></ap-navigation>
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <aside class="left-sidebar">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar" [perfectScrollbar]="config">
+            <ap-sidebar></ap-sidebar>
+        </div>
+        <!-- End Sidebar scroll-->
+    </aside>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <breadcrumb></breadcrumb>
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <router-outlet></router-outlet>
+            <!-- ============================================================== -->
+            <!-- End Start Page Content -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Setting Right sidebar -->
+            <!-- ============================================================== -->
+            <button class="right-side-toggle btn-inverse btn btn-circle btn-lg" (click)="showSettings = !showSettings"><i class="ti-settings text-white fa-spin"></i></button>
+            <div class="right-sidebar" [ngClass]="{'shw-rside': showSettings}">
+                <div class="slimscrollright">
+                    <div class="rpanel-title"> Settings <span><i class="ti-close right-side-toggle" (click)="showSettings = !showSettings"></i></span> </div>
+                    <div class="r-panel-body" [perfectScrollbar]="config">
+                        
+                        <ul>    
+                            <li class="m-b-20 m-t-20"><b>Light Sidebar / Colors</b></li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct1" name="radio-stacked" type="radio" value="default" [(ngModel)]="color">
+                                    <label class="custom-control-label" for="ct1">Default</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct2" name="radio-stacked" type="radio" value="green" [(ngModel)]="color">
+                                    <label class="custom-control-label" for="ct2">Green</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct4" name="radio-stacked" type="radio" value="red" [(ngModel)]="color">
+                                    <label class="custom-control-label" for="ct4">Red</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct5" name="radio-stacked" type="radio" value="blue" [(ngModel)]="color">
+                                    <label class="custom-control-label text-info" for="ct5">Blue</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct6" name="radio-stacked" type="radio" value="purple" [(ngModel)]="color">
+                                    <label class="custom-control-label text-purple" for="ct6">Purple</label>
+                                </div>
+                            </li>
+                            <li>
+                               <div class="custom-control custom-checkbox">
+                                   <input class="custom-control-input" id="ct7" name="radio-stacked" type="radio" value="megna" [(ngModel)]="color">
+                                   <label class="custom-control-label text-megna" for="ct7">Megna</label>
+                               </div>
+                            </li>
+                        </ul>    
+                            <hr>
+                        <ul>    
+                            <li class="m-b-20"><b>Dark Sidebar / Colors</b></li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct8" name="radio-stacked" type="radio" value="defaultdark" [(ngModel)]="color">
+                                    <label class="custom-control-label" for="ct8">Default</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct9" name="radio-stacked" type="radio" value="greendark" [(ngModel)]="color">
+                                    <label class="custom-control-label text-success" for="ct9">Green</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct10" name="radio-stacked" type="radio" value="reddark" [(ngModel)]="color">
+                                    <label class="custom-control-label text-danger" for="ct10">Red</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct11" name="radio-stacked" type="radio" value="bluedark" [(ngModel)]="color">
+                                    <label class="custom-control-label text-info" for="ct11">Blue</label>
+                                </div>
+                            </li>
+                            <li>
+                               <div class="custom-control custom-checkbox">
+                                     <input class="custom-control-input" id="ct12" name="radio-stacked" type="radio" value="purpledark" [(ngModel)]="color">
+                                     <label class="custom-control-label text-purple" for="ct12">Purple</label>
+                               </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="ct13" name="radio-stacked" type="radio" value="megnadark" [(ngModel)]="color">
+                                    <label class="custom-control-label text-megna" for="ct13">Megna</label>
+                                </div>
+                            </li>
+                        </ul>
+                        <hr>
+                        <ul>
+                            <li class="m-b-20 m-t-20"><b>General Setting</b></li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input sidebartoggler" id="ct14" type="checkbox" [(ngModel)]="showMinisidebar">
+                                    <label class="custom-control-label" for="ct14">Mini Sidebar</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="ct15" [(ngModel)]="showDarktheme" class="custom-control-input"> 
+                                    <label class="custom-control-label" for="ct15">Dark Theme</label> 
+                                </div>
+                            </li>
+                        </ul>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Right sidebar -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->    
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+    <footer class="footer">
+        © 2018 STB Management App by Mouhamed Amine Bousselmi
+    </footer>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+    
+</div>

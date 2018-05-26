@@ -1,0 +1,128 @@
+<header class="topbar">
+    <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <!-- ============================================================== -->
+        <!-- Logo -->
+        <!-- ============================================================== -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">
+                <!-- Logo icon --><b>
+                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                    <!-- Dark Logo icon -->
+                    <img src="assets/images/logo.png" alt="STBAppManagement" class="dark-logo" />
+                    <!-- Light Logo icon -->
+                    <img src="assets/images/logo.png" alt="STBAppManagement" class="light-logo" />
+                </b>
+                <!--End Logo icon -->
+                <!-- Logo text --><span>
+                 <!-- dark Logo text -->
+                
+                 <!-- Light Logo text -->    
+                </span> </a>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Logo -->
+        <!-- ============================================================== -->
+        <div class="navbar-collapse">
+            <!-- ============================================================== -->
+            <!-- toggle and nav items -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav mr-auto mt-md-0">
+                <!-- This is  -->
+                
+                <li class="nav-item m-l-10"> <a class="nav-link sidebartoggler text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                <!-- ============================================================== -->
+                <!-- Comment -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a ngbDropdownToggle class="nav-link text-muted text-muted waves-effect waves-dark" href="javascript:void(0)"> <i class="mdi mdi-message"></i>
+                        <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                    </a>
+                    <div class="dropdown-menu mailbox animated slideInDown" ngbDropdownMenu>
+                        <ul>
+                            <li>
+                                <div class="drop-title">Notifications</div>
+                            </li>
+                            <li>
+                                <div class="message-center" [perfectScrollbar]="config">
+                                   <!-- Message -->
+                                    <a *ngFor="let notific of operations | async">
+                                        <div>{{notific.codeCompte}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>{{notific.typeOperation}}</h5> <span class="mail-desc">{{notific.typeOperation}} of {{notific.montant}} <br> done by {{notific.nomUtilisateur}}</span> <span class="time">{{notific.date}}</span> 
+                                        </div>
+                                    </a>
+
+                                    <a *ngFor="let notificR of operationsR | async">
+                                        <div>{{notificR.codeCompte}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>{{notificR.typeOperation}}</h5> <span class="mail-desc">{{notificR.typeOperation}} of {{notificR.montant}} <br> done by {{notificR.nomUtilisateur}}</span> <span class="time">{{notificR.date}}</span> 
+                                        </div>
+                                    </a>
+
+                                    <a *ngFor="let notificVI of operationsVIs | async">
+                                        <div>{{notificVI.codeCompte}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>{{notificVI.typeOperation}}</h5> <span class="mail-desc">{{notificVI.typeOperation}} of {{notificVI.montant}} <br> done by {{notificVI.nomUtilisateur}} <br> To Account {{notificVI.compteTransfere}}</span> <span class="time">{{notificVI.date}}</span> 
+                                        </div>
+                                    </a>
+
+                                    <a *ngFor="let notifch of Currencys | async">
+                                        <div *ngIf="notifch.typeChange == 0">Buy From {{notifch.fromCurrCode}} To {{notifch.toCurrCode}}</div>
+                                        <div *ngIf="notifch.typeChange == 1">Sell From {{notifch.fromCurrCode}} To {{notifch.toCurrCode}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>{{notifch.typeOperation}}</h5> <span class="mail-desc">{{notifch.typeOperation}} of {{notifch.montant}} <br> converted To {{notifch.montantConvertie}} <br> done by {{notifch.nomUtilisateur}}</span> <span class="time">{{notifch.dateCH}}</span> 
+                                        </div>
+                                    </a>
+
+                                    <a *ngFor="let notifcheck of checks | async">
+                                        <div>{{notifcheck.typeOperation}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>Account : {{notifcheck.codeCompte}}</h5> <span class="mail-desc">{{notifcheck.typeOperation}} of {{notifcheck.montant}} <br> done by {{notifcheck.nomUtilisateur}}</span> <span class="time">{{notifcheck.date}}</span> 
+                                        </div>
+                                    </a> 
+
+                                    <a *ngFor="let notifTache of taskss | async">
+                                        <div>{{notifTache.typeOperation}}</div>
+                                        <div class="mail-contnet">
+                                            <h5>{{notifTache.typeOperation}}</h5> <span class="mail-desc">{{notifTache.taskMesssage}} <br> done by {{notifTache.nomUtilisateur}}</span> <span class="time">{{notifTache.date}}</span> 
+                                        </div>
+                                    </a> 
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- ============================================================== -->
+                <!-- End Comment -->
+                <!-- ============================================================== -->   
+            </ul>
+            <!-- ============================================================== -->
+            <!-- User profile and search -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav my-lg-0">
+        
+                <!-- ============================================================== -->
+                <!-- Profile -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown" ngbDropdown placement="bottom-right">
+                    <a ngbDropdownToggle class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="javascript:void(0)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="assets/images/amine.jpg" alt="user" class="profile-pic" /></a>
+                    <div class="dropdown-menu dropdown-menu-right animated slideInDown" ngbDropdownMenu>
+                        <ul class="dropdown-user">
+                            <li>
+                                <div class="dw-user-box">
+                                    <div class="u-img"><img src="assets/images/amine.jpg" alt="user"></div>
+                                    <div class="u-text">
+                                        <h4>{{Employe?.nomPersonne}}</h4>
+                                        <p class="text-muted">{{Employe?.email}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li><a (click)="logout()"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

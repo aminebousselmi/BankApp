@@ -1,0 +1,160 @@
+<div class="card">
+    <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Task</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form #taskForm="ngForm" (submit)="TaskAdd()">
+                <div [hidden]="taskForm.submitted">
+                    <div class="form-group">
+                        <label for="Title">Title</label>
+                        <input id="Title" name="Title" class="form-control" required minlength="2" forbiddenName="title" [(ngModel)]="Task.Title" #Title="ngModel">
+                        <div *ngIf="Title.invalid && (Title.dirty || Title.touched)" class="alert alert-danger">
+                            <div *ngIf="Title.errors.required"> Title is required. </div>
+                            <div *ngIf="Title.errors.minlength"> Title must be at least 2 characters long. </div>
+                            <div *ngIf="Title.errors.forbiddenName"> Title cannot be title. </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Content">Content</label>
+                        <input id="Content" name="Content" class="form-control" required minlength="5" forbiddenName="Content" [(ngModel)]="Task.Content" #Title="ngModel">
+                        <div *ngIf="Content?.invalid && (Content.dirty || Content.touched)" class="alert alert-danger">
+                            <div *ngIf="Content.errors.required"> Content is required. </div>
+                            <div *ngIf="Content.errors.minlength"> Content must be at least 5 characters long. </div>
+                            <div *ngIf="Content.errors.forbiddenName"> Content cannot be Content. </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="example-datetime-local-input">Date Start</label>
+                        <input class="form-control" id="dateStarting" required type="date" [(ngModel)]="Task.DateStart" name="DateStart"  value="2018-04-28T13:45:00">
+                        <div *ngIf="dateStarting?.invalid && dateStarting.touched" class="alert alert-danger">
+                            <div *ngIf="Content.errors.required"> Content is required. </div>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label for="example-datetime-local-input">Date End</label>
+                        <input class="form-control" id="dateEnd" required type="date" [(ngModel)]="Task.DateEnd" name="DateEnd" value="2018-04-28T13:45:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="Priority">Priority</label>
+                        <select id="Priority" name="Priority" class="form-control" required [(ngModel)]="Task.Priority" #Priority="ngModel">
+                            <option *ngFor="let p of priorities" [value]="p">{{p}}</option>
+                        </select>
+                        <div *ngIf="Priority.errors && Priority.touched" class="alert alert-danger">
+                            <div *ngIf="Priority.errors.required">Priority is required.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Employe">Employe</label>
+                        <select id="idEmploye" name="idEmploye" class="form-control" required [(ngModel)]="Task.idEmploye" #idEmploye="ngModel">
+                            <option *ngFor="let emp of ListEmployes" [value]="emp.codePersonne">{{emp.username}}</option>
+                        </select>
+                        <div *ngIf="idEmploye.errors && idEmploye.touched" class="alert alert-danger">
+                            <div *ngIf="idEmploye.errors.required">Employe is required.</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger" [disabled]="taskForm.invalid">Submit</button>
+                    <button type="button" class="btn btn-inverse" (click)="taskForm.resetForm({})">Reset</button>
+                </div>
+                <div class="submitted-message" *ngIf="taskForm.submitted">
+                    <p>You've submitted your Task, {{ taskForm.value.Title }}!</p>
+                    <button class="btn btn-inverse" (click)="taskForm.resetForm({})">Add new Task</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+        </div>
+</ng-template>
+    <button type="button" class="btn btn-secondary" (click)="open2(content)">
+        <i class="ti-settings"></i> Add Task
+    </button>
+        <div class="card-body">
+          <div class="taskboard page-height">
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list">
+            <h6 class="taskboard-header">Backlog</h6>
+            <div class="taskboard-cards" [dragula]='"task-group"'  *ngFor="let tsk of GetArrayBackLog">
+              <div class="taskboard-task task-status-danger" *ngIf="tsk.priority == 2">
+                <div class="taskboard-task-title">#{{tsk.idTask}} | {{tsk.taskTitle}} <br> Employe : {{tsk.username}}</div>
+                <small class="card-text text-muted">{{tsk.taskContent}}. <br> Date Start : {{tsk.dateDebut}} <br> Date End : {{tsk.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-warning" *ngIf="tsk.priority == 1">
+                  <div class="taskboard-task-title">#{{tsk.idTask}} | {{tsk.taskTitle}}<br> Employe : {{tsk.username}}</div>
+                  <small class="card-text text-muted">{{tsk.taskContent}}. <br> Date Start : {{tsk.dateDebut}} <br> Date End : {{tsk.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-success" *ngIf="tsk.priority == 0">
+                  <div class="taskboard-task-title">#{{tsk.idTask}} | {{tsk.taskTitle}}<br> Employe : {{tsk.username}}</div>
+                  <small class="card-text text-muted">{{tsk.taskContent}}. <br> Date Start : {{tsk.dateDebut}} <br> Date End : {{tsk.dateFin}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list">
+            <h6 class="taskboard-header">ToDo</h6>
+            <div class="taskboard-cards" [dragula]='"task-group"' *ngFor="let tskTD of GetArrayTODO">
+              <div class="taskboard-task task-status-danger" *ngIf="tskTD.priority == 2">
+                <div class="taskboard-task-title">#{{tskTD.idTask}} | {{tskTD.taskTitle}} <br> Employe : {{tskTD.username}}</div>
+                <small class="card-text text-muted">{{tskTD.taskContent}}. <br> Date Start : {{tskTD.dateDebut}} <br> Date End : {{tskTD.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-warning" *ngIf="tskTD.priority == 1">
+                  <div class="taskboard-task-title">#{{tskTD.idTask}} | {{tskTD.taskTitle}}<br> Employe : {{tskTD.username}}</div>
+                  <small class="card-text text-muted">{{tskTD.taskContent}}. <br> Date Start : {{tskTD.dateDebut}} <br> Date End : {{tskTD.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-success" *ngIf="tskTD.priority == 0">
+                  <div class="taskboard-task-title">#{{tskTD.idTask}} | {{tskTD.taskTitle}}<br> Employe : {{tskTD.username}}</div>
+                  <small class="card-text text-muted">{{tskTD.taskContent}}. <br> Date Start : {{tskTD.dateDebut}} <br> Date End : {{tskTD.dateFin}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list">
+            <h6 class="taskboard-header">InProcess</h6>
+            <div class="taskboard-cards" [dragula]='"task-group"' *ngFor="let tskIP of GetArrayINPROCESS">
+              <div class="taskboard-task task-status-danger" *ngIf="tskIP.priority == 2">
+                <div class="taskboard-task-title">#{{tskIP.idTask}} | {{tskIP.taskTitle}} <br> Employe : {{tskIP.username}}</div>
+                <small class="card-text text-muted">{{tskIP.taskContent}}. <br> Date Start : {{tskIP.dateDebut}} <br> Date End : {{tskIP.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-warning" *ngIf="tskIP.priority == 1">
+                  <div class="taskboard-task-title">#{{tskIP.idTask}} | {{tskIP.taskTitle}}<br> Employe : {{tskIP.username}}</div>
+                  <small class="card-text text-muted">{{tskIP.taskContent}}. <br> Date Start : {{tskIP.dateDebut}} <br> Date End : {{tskIP.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-success" *ngIf="tskIP.priority == 0">
+                  <div class="taskboard-task-title">#{{tskIP.idTask}} | {{tskIP.taskTitle}}<br> Employe : {{tskIP.username}}</div>
+                  <small class="card-text text-muted">{{tskIP.taskContent}}. <br> Date Start : {{tskIP.dateDebut}} <br> Date End : {{tskIP.dateFin}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="taskboard-wrapper">
+          <div class="taskboard-list">
+            <h6 class="taskboard-header">Done</h6>
+            <div class="taskboard-cards" [dragula]='"task-group"' *ngFor="let tskDO of GetArrayDONE">
+              <div class="taskboard-task task-status-danger" *ngIf="tskDO.priority == 2">
+                <div class="taskboard-task-title">#{{tskDO.idTask}} | {{tskDO.taskTitle}} <br> Employe : {{tskDO.username}}</div>
+                <small class="card-text text-muted">{{tskDO.taskContent}}. <br> Date Start : {{tskDO.dateDebut}} <br> Date End : {{tskDO.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-warning" *ngIf="tskDO.priority == 1">
+                  <div class="taskboard-task-title">#{{tskDO.idTask}} | {{tskDO.taskTitle}}<br> Employe : {{tskDO.username}}</div>
+                  <small class="card-text text-muted">{{tskDO.taskContent}}. <br> Date Start : {{tskDO.dateDebut}} <br> Date End : {{tskDO.dateFin}}</small>
+              </div>
+              <div class="taskboard-task task-status-success" *ngIf="tskDO.priority == 0">
+                  <div class="taskboard-task-title">#{{tskDO.idTask}} | {{tskDO.taskTitle}}<br> Employe : {{tskDO.username}}</div>
+                  <small class="card-text text-muted">{{tskDO.taskContent}}. <br> Date Start : {{tskDO.dateDebut}} <br> Date End : {{tskDO.dateFin}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,236 @@
+<!-- ============================================================== -->
+<!-- Ten Widget -->
+<!-- ============================================================== -->
+<div class="row">
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Daily Check</h4>
+                <div class="text-right">
+                    <h1 class="font-light"><sup>TND</sup> {{statOp.totalDaily}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Weekly Check</h4>
+                <div class="text-right">
+                    <h1 class="font-light"><sup>TND</sup> {{statOp.totalWeekly}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="card-title">Monthly Check</h4>
+                <div class="text-right">
+                    <h1 class="font-light"><sup>TND</sup> {{statOp.totalMonthly}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Yearly Check</h4>
+                <div class="text-right">
+                    <h1 class="font-light"><sup>TND</sup> {{statOp.totalYearly}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="btn-group">
+                    <div class="btn btn-success" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"  (click)="getData(view,viewDate)"> Previous </div>
+                    <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate" (click)="getData(view,viewDate)"> Today </div>
+                    <div class="btn btn-info" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (click)="getData(view,viewDate)"> Next </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3> 
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="btn-group">
+                    <div class="btn btn-info" (click)="view = 'month'" [class.active]="view === 'month'" (click)="getData(view,viewDate)"> Month </div>
+                    <div class="btn btn-success" (click)="view = 'week'" [class.active]="view === 'week'" (click)="getData(view,viewDate)"> Week </div>
+                    <div class="btn btn-warning" (click)="view = 'day'" [class.active]="view === 'day'" (click)="getData(view,viewDate)"> Day </div>
+                
+                </div>
+            </div>
+            
+        </div>
+        <br> 
+        <div [ngSwitch]="view">
+            <ul class="timeline" *ngFor="let checkOp of checkOperations; let i = index">
+                <li *ngIf="(i % 2)== 0 ">
+                    <div class="timeline-badge success"><img class="img-responsive" alt="user" src="assets/images/amine.jpg" alt="img"> </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{checkOp.dateV}}</small> </p>
+                        </div>
+                        <div class="timeline-body">
+                            <div class="card bg-white">
+                                <div class="card-body">
+                                    <ngb-carousel class="no-control-indicator">
+                                        <ng-template ngbSlide>
+                                            <div class="">
+                                                    <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td>#</td>
+                                                                        <td>CIN</td>
+                                                                        <td>name & last name</td>
+                                                                        <td>Amount</td>
+                                                                        <td>Check Number</td>
+                                                                        <td>Bank</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>{{checkOp.idC}}</td>
+                                                                        <td>{{checkOp.cinProprietaire}}</td>
+                                                                        <td>{{checkOp.nomProprietaire}} {{checkOp.prenomProprietaire}}</td>
+                                                                        <td><span class="label label-danger">{{checkOp.montant}}</span></td>
+                                                                        <td><span class="label label-danger">{{checkOp.numeroC}}</span></td>
+                                                                        <td>{{checkOp.bankName}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                    </div>
+                                                <div>
+                                                    <ng-template #content let-c="close" let-d="dismiss">
+                                                            <div class="modal-header">
+                                                              <h4 class="modal-title">Account Details</h4>
+                                                              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                    <div class="table-responsive">
+                                                                            <table class="table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Account Number</th>
+                                                                                        <th>Date Creation</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td><span class="label label-danger">{{checkOp.codeCompte}}</span></td>
+                                                                                        <td>{{checkOp.dateCreation}} </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+                                                            </div>
+                                                    </ng-template>
+                                                    <button class="btn btn-primary waves-effect waves-light m-t-15" (click)="open2(content)">Details</button>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </ngb-carousel>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="timeline-inverted" *ngIf="(i % 2)!= 0 ">
+                    <div class="timeline-badge success"><img class="img-responsive" alt="user" src="assets/images/amine.jpg" alt="img"> </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{checkOp.dateV}}</small> </p>
+                        </div>
+                        <div class="timeline-body">
+                            <div class="card bg-white">
+                                <div class="card-body">
+                                    <ngb-carousel class="no-control-indicator">
+                                        <ng-template ngbSlide>
+                                            <div class="">
+                                                    <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td>#</td>
+                                                                        <td>CIN</td>
+                                                                        <td>name & last name</td>
+                                                                        <td>Amount</td>
+                                                                        <td>Check Number</td>
+                                                                        <td>Bank</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>{{checkOp.idC}}</td>
+                                                                        <td>{{checkOp.cinProprietaire}}</td>
+                                                                        <td>{{checkOp.nomProprietaire}} {{checkOp.prenomProprietaire}}</td>
+                                                                        <td><span class="label label-danger">{{checkOp.montant}}</span></td>
+                                                                        <td><span class="label label-danger">{{checkOp.numeroC}}</span></td>
+                                                                        <td>{{checkOp.bankName}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                    </div>
+                                                <div>
+                                                    <ng-template #content let-c="close" let-d="dismiss">
+                                                            <div class="modal-header">
+                                                              <h4 class="modal-title">Account Details</h4>
+                                                              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                    <div class="table-responsive">
+                                                                            <table class="table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Account Number</th>
+                                                                                        <th>Date Creation</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td><span class="label label-danger">{{checkOp.codeCompte}}</span></td>
+                                                                                        <td>{{checkOp.dateCreation}} </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+                                                            </div>
+                                                    </ng-template>
+                                                    <button class="btn btn-primary waves-effect waves-light m-t-15" (click)="open2(content)">Details</button>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </ngb-carousel>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>   
+    </div>
+</div>

@@ -1,0 +1,48 @@
+.email-container{
+    overflow: hidden;
+} 
+.list-group-item {
+    cursor: pointer;
+    &.selected {
+      background-color: #fffbf4;
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: #fffbf4;
+      }
+    }
+    a .time {
+      font-size: 10px;
+    }
+  }
+
+@media(min-width:770px) {
+    .inb-right {
+        height: 100vh!important;
+        overflow: auto;
+    }
+    .inbox-panel{
+        margin-right: -15px;    
+    }
+}
+
+.avatar-sm{
+    width: 50px;
+}
+.avatar-lg{
+    width: 100px;
+}
+.avatar-status{
+    border-radius: 100%;
+    padding: 3px;
+}
+
+@media(max-width:768px) {
+    .inb-right {
+        height: 200px!important;
+        overflow: auto;
+    }
+    .avatar-lg{
+        width: 50px;
+    }
+}
