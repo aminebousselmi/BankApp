@@ -26,7 +26,7 @@
                                         <div class="widget-title">Operations</div>
                                     </div>
                                     <div class="widget-controls">                                
-                                        <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+                                        <a class="widget-control-right"><span class="fa fa-times"></span></a>
                                     </div>                            
                                 </div>
     
@@ -43,7 +43,7 @@
                                             <div class="widget-title">bank transfer</div>
                                         </div>
                                         <div class="widget-controls">                                
-                                            <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+                                            <a class="widget-control-right"><span class="fa fa-times"></span></a>
                                         </div>                            
                                     </div>
         
@@ -52,11 +52,10 @@
                             <div class="col-md-3">
 
                                     <div class="widget widget-success widget-no-subtitle">
-                                        <div class="widget-big-int">$ <span class="num-count">{{LatestTransfer}}</span></div>                            
+                                        <div class="widget-big-int">TND <span class="num-count">{{LatestTransfer}}</span></div>                            
                                         <div class="widget-subtitle">Latest transaction</div>
                                         <div class="widget-controls">
-                                            <a href="#" class="widget-control-left"><span class="fa fa-cloud"></span></a>
-                                            <a href="#" class="widget-control-right"><span class="fa fa-times"></span></a>
+                                            <a class="widget-control-right"><span class="fa fa-times"></span></a>
                                         </div>                            
                                     </div>                        
         
@@ -104,7 +103,7 @@
                                             <form (submit)="AddOperationV(amountV)">
                                                 <div class="form-group">
                                                         <label>Amount</label>
-                                                        <input type="text" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountV" name="amountV"/>
+                                                        <input type="number" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountV" name="amountV"/>
                                                 </div>
                                                 <div class="col-md-4">
                                                         <button class="btn btn-success btn-block" >Deposit</button>
@@ -115,7 +114,7 @@
                                             <form (submit)="AddOperationR(amountR)">
                                                 <div class="form-group">
                                                         <label>Amount</label>
-                                                        <input type="text" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountR" name="amountR" />
+                                                        <input type="number" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountR" name="amountR" />
                                                 </div>
                                                 <div class="col-md-4">
                                                         <button class="btn btn-success btn-block">Withdraw</button>
@@ -123,17 +122,20 @@
                                             </form>
                                         </div>
                                         <div class="tab-pane" id="virement">
-                                            <form (submit)="AddOperationVI(cp2,amountVI)">
+                                            <form>
                                                 <div class="form-group">
                                                         <label>Account Number</label>
-                                                        <input type="text" class="form-control" placeholder="Enter the account number" [(ngModel)]="cp2" name="cp2"/>
+                                                        <select class="form-control"  [(ngModel)]="cp2" name="cp2">
+                                                            <option *ngFor="let cp of Compte" [value]="cp.codeCompte">{{cp.codeCompte}}</option>
+                                                        </select>
                                                 </div>
+                                                
                                                 <div class="form-group">
                                                         <label>Amount</label>
-                                                        <input type="text" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountVI" name="amountVI"/>
+                                                        <input type="number" class="form-control" placeholder="Enter the amount" [(ngModel)]="amountVI" name="amountVI"/>
                                                 </div>
                                                 <div class="col-md-4">
-                                                        <button class="btn btn-success btn-block">Transfer</button>
+                                                        <button class="btn btn-success btn-block" (click)="AddOperationVI(cp2,amountVI)">Transfer</button>
                                                 </div>
                                             </form>    
                                         </div>                        
@@ -146,14 +148,24 @@
 
                             <div class="panel panel-default" *ngIf="compte?.codeCompte != null">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Account Information</h3>                                      
+                                    <h3 class="panel-title">Account Information</h3>    
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                            <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                            <li class="dropdown">
+                                                <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                                <ul class="dropdown-menu">
+                                                    <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                    <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                                </ul>                                        
+                                            </li>                                        
+                                    </ul>                                    
                                 </div>
                                 <div class="panel-body list-group">
                                     <a class="list-group-item"><span class="fa fa-inbox"></span> Account Number <span class="badge badge-danger">{{compte.codeCompte}}</span></a>
                                     <a class="list-group-item"><span class="fa fa-calendar"></span> Creation Date <span class="badge badge-danger">{{compte.dateCreation}}</span></a>                                
-                                    <a class="list-group-item"><span class="fa fa-money"></span> Balance <span class="badge badge-danger">{{compte.solde}} $</span></a>
-                                    <a class="list-group-item" *ngIf="compte.taux != null"><span class="fa fa-money"></span> Discovery <span class="badge badge-danger">{{compte.taux}} $</span></a>
-                                    <a class="list-group-item" *ngIf="compte.taux == null"><span class="fa fa-money"></span> Rate <span class="badge badge-danger">{{compte.decouvert}} $</span></a>
+                                    <a class="list-group-item"><span class="fa fa-money"></span> Balance <span class="badge badge-danger">{{compte.solde}} TND</span></a>
+                                    <a class="list-group-item" *ngIf="compte.taux != null"><span class="fa fa-money"></span> Discovery <span class="badge badge-danger">{{compte.taux}} TND</span></a>
+                                    <a class="list-group-item" *ngIf="compte.taux == null"><span class="fa fa-money"></span> Rate <span class="badge badge-danger">{{compte.decouvert}} TND</span></a>
                                 </div>
                             </div>
 
@@ -174,16 +186,12 @@
                                         <div class="profile-data">
                                             <div class="profile-data-name">Customer Informations</div>
                                         </div>
-                                        <div class="profile-controls">
-                                            <a href="#" class="profile-control-left"><span class="fa fa-twitter"></span></a>
-                                            <a href="" class="profile-control-right"><span class="fa fa-envelope"></span></a>
-                                        </div>
     
                                     </div>
                                     <div class="panel-body list-group">
-                                            <a href="#" class="list-group-item"><span class="fa fa-bar-chart-o"></span><span class="label label-danger">ID</span> : {{compte.codeClient}}</a>
-                                        <a href="#" class="list-group-item"><span class="fa fa-user"></span><span class="label label-danger">Full Name</span> :  {{compte.nomClient}}</a>
-                                        <a href="#" class="list-group-item"><span class="fa fa-cog"></span><span class="label label-danger">Account Number</span> :  {{compte.codeCompte}}</a>
+                                        <a  class="list-group-item"><span class="fa fa-bar-chart-o"></span><span class="label label-danger">ID</span> : {{compte.codeClient}}</a>
+                                        <a  class="list-group-item"><span class="fa fa-user"></span><span class="label label-danger">Full Name</span> :  {{compte.nomClient}}</a>
+                                        <a  class="list-group-item"><span class="fa fa-cog"></span><span class="label label-danger">Account Number</span> :  {{compte.codeCompte}}</a>
                                     </div>                            
                                 </div>
     
@@ -194,7 +202,17 @@
                                 
                                 <div class="panel panel-default" *ngIf="compte?.codeCompte != null">
                                      <div class="panel-heading">
-                                        <h3 class="panel-title">Operation Information</h3>                                      
+                                        <h3 class="panel-title">Operation Information</h3>     
+                                        <ul class="panel-controls" style="margin-top: 2px;">
+                                                <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                                <li class="dropdown">
+                                                    <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                                    <ul class="dropdown-menu">
+                                                        <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                        <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                                    </ul>                                        
+                                                </li>                                        
+                                        </ul>                                   
                                     </div>
                                     <div class="panel-body">
                                         <div class="panel-body panel-body-table">
@@ -209,18 +227,26 @@
                                                             <th width="10%"><mfDefaultSorter by="Type">Type</mfDefaultSorter></th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody  *ngIf="compte.operationCompteDTO == null">
+                                                        <tr>
+                                                            <td><strong>No Data Available</strong></td>
+                                                            <td><strong>No Data Available</strong></td>
+                                                            <td><strong>No Data Available</strong></td>
+                                                            <td><strong>No Data Available</strong></td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody  *ngIf="compte.operationCompteDTO != null">
                                                         <tr *ngFor="let oper of mf.data">
                                                             <td><strong>{{oper.numeroOperation}}</strong></td>
                                                             <td><span class="label label-danger">{{oper.dateOperation}}</span></td>
-                                                            <td><strong>{{oper.montant}} $</strong></td>
+                                                            <td><strong>{{oper.montant}} TND</strong></td>
                                                             <td *ngIf="oper.typeO == 0">Payment</td>
                                                             <td *ngIf="oper.typeO == 1">Withdrawal</td>
                                                             <td *ngIf="oper.typeO == 2">Transfer</td>
                                                         </tr>
                                                     </tbody>
                                                     <tfoot>
-                                                        <tr class="pagination pagination-sm pull-right">
+                                                        <tr class="pagination pagination-sm pull-right" *ngIf="compte.operationCompteDTO != null">
                                                                 <mfBootstrapPaginator></mfBootstrapPaginator>        
                                                         </tr>
                                                     </tfoot>

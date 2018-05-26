@@ -1,28 +1,83 @@
-  <!-- START BREADCRUMB -->
+<ng4-loading-spinner> </ng4-loading-spinner>
+<!-- START BREADCRUMB -->
   <ul class="breadcrumb push-down-0">
         <li><a href="#">Home</a></li>
-        <li><a href="#">Daily Task</a></li>
+        <li><a href="#">Task</a></li>
     </ul>
     <!-- END BREADCRUMB -->                                                
     
     <!-- PAGE CONTENT WRAPPER -->
     <div class="page-content-wrap">
             <div class="row">
-                    <div class="col-md-12">
+                <div class="col-md-12">
+            
+                    <!-- START List of Operations -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title-box">
+                                <h3>All Tasks</h3>
+                                <span>List of Tasks</span>
+                            </div>                                    
+                            <ul class="panel-controls" style="margin-top: 2px;">
+                                <li><a  class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                <li class="dropdown">
+                                    <a  class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                    <ul class="dropdown-menu">
+                                        <li><a  class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                        <li><a  class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                    </ul>                                        
+                                </li>                                        
+                            </ul>
+                        </div>
+                        <div class="panel-body panel-body-table">
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" [mfData]="ListTasks" id="taskInfoEmp" #mf="mfDataTable" [mfRowsOnPage]="6">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">ID</th>
+                                            <th width="50%">Title</th>
+                                            <th width="20%">Date Start</th>
+                                            <th width="30%">Content</th>
+                                            <th width="30%">Date End</th>
+                                            <th width="30%">Priority</th>
+                                            <th width="30%">To DO</th>
+                                            <th width="30%">In Process</th>
+                                            <th width="30%">Done</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let taskL of mf.data">
+                                            <td>#<strong>{{taskL.idTask}}</strong></td>
+                                            <td>{{taskL.taskTitle}}</td>
+                                            <td><span class="label label-danger">{{taskL.dateDebut}}</span></td>
+                                            <td>{{taskL.taskContent}}</td>
+                                            <td><span class="label label-danger">{{taskL.dateFin}}</span></td>
 
-                        <div class="error-container">
-                            <div class="error-code">404</div>
-                            <div class="error-text">page not found</div>
-                            <div class="error-subtext">Unfortunately we're constructing this page that you are looking for. Wait until we finish .</div>
-                            <div class="error-actions">                                
-                                <div class="row">
-                                        <button class="btn btn-info btn-block btn-lg" (click)="BackDash()" >Back to dashboard</button>
+                                            <td *ngIf="taskL.priority == 0"><span class="label label-success">Low</span></td>
+                                            <td *ngIf="taskL.priority == 1"><span class="label label-warning">Normal</span></td>
+                                            <td *ngIf="taskL.priority == 2"><span class="label label-danger">Hight</span></td>
 
-                                </div>                                
+                                            <td *ngIf="taskL.taskType == 1"><button type="button" class="btn btn-warning btn-rounded" disabled><i class="fa fa-check-circle"></i></button></td>
+                                            <td *ngIf="taskL.taskType != 1"><button type="button" (click)="ChangeEtat(taskL.idTask,'ToDo')" class="btn btn-warning btn-rounded"><i class="fa fa-ban"></i></button></td>
+                                            <td *ngIf="taskL.taskType == 2"><button type="button" class="btn btn-warning btn-rounded" disabled><i class="fa fa-check-circle"></i></button></td>
+                                            <td *ngIf="taskL.taskType != 2"><button type="button" (click)="ChangeEtat(taskL.idTask,'InProcess')" class="btn btn-warning btn-rounded"><i class="fa fa-ban"></i></button></td>
+                                            <td *ngIf="taskL.taskType == 3"><button type="button" class="btn btn-warning btn-rounded" disabled><i class="fa fa-check-circle"></i></button></td>
+                                            <td *ngIf="taskL.taskType != 3"><button type="button" (click)="ChangeEtat(taskL.idTask,'Done')" class="btn btn-warning btn-rounded"><i class="fa fa-ban"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="pagination pagination-sm pull-right">
+                                                <mfBootstrapPaginator></mfBootstrapPaginator>        
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                             
                         </div>
-
                     </div>
+                    <!-- END List of Operations -->
+                    
+                </div>
                 </div>
     </div>

@@ -13,37 +13,42 @@ export class OperationService {
 
     constructor(private http: HttpClient,private jwtHelper: JwtHelper){}
 
-    Versement(code,montant,codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/Verser/`+code+'/'+montant+'/'+codeEmp)
-      }
+    //-- VERSEMENT - RETRAIT - VIREMENT
+    Versement(code,montant,codeEmp,IdAgence) {
+      return this.authGet$(`http://localhost:44365/api/Verser/`+code+'/'+montant+'/'+codeEmp+'/'+IdAgence)
+    }
 
-    Retrait(code,montant,codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/Retier/`+code+'/'+montant+'/'+codeEmp)
-      }
+    Retrait(code,montant,codeEmp,IdAgence) {
+      return this.authGet$(`http://localhost:44365/api/Retier/`+code+'/'+montant+'/'+codeEmp+'/'+IdAgence)
+    }
 
-    Virement(cp1,cp2,montant,codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/Virement/`+cp1+'/'+cp2+'/'+montant+'/'+codeEmp)
-      }
+    Virement(cp1,cp2,montant,codeEmp,IdAgence) {
+      return this.authGet$(`http://localhost:44365/api/Virement/`+cp1+'/'+cp2+'/'+montant+'/'+codeEmp+'/'+IdAgence)
+    }
 
-      GetCountOperationsByEmploye(codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/GetCountOperationsByEmploye/`+codeEmp)
-      }
+    //-- END VERSEMENT - RETRAIT - VIREMENT
 
-      GetCountTransferByEmploye(codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/GetCountTransferByEmploye/`+codeEmp)
-      }
+    //-- STATISTICAL OPERATIONS
+    GetCountOperationsByEmploye(codeEmp) {
+      return this.authGet$(`http://localhost:44365/api/GetCountOperationsByEmploye/`+codeEmp)
+    }
 
-      GetLatestTransferByEmploye(codeEmp) {
-        return this.authGet$(`http://localhost:44365/api/GetLatestTransactionByEmploye/`+codeEmp)
-      }
+    GetCountTransferByEmploye(codeEmp) {
+      return this.authGet$(`http://localhost:44365/api/GetCountTransferByEmploye/`+codeEmp)
+    }
 
-      GetActiveAccount() {
-        return this.authGet$(`http://localhost:44365/api/GetCountActiveAccount`)
-      }
+    GetLatestTransferByEmploye(codeEmp) {
+      return this.authGet$(`http://localhost:44365/api/GetLatestTransactionByEmploye/`+codeEmp)
+    }
 
+    GetActiveAccount() {
+      return this.authGet$(`http://localhost:44365/api/GetCountActiveAccount`)
+    }
 
-        //-- SECURING API DATA
-        public authGet$(url) {
+    //-- END STATISTICAL OPERATIONS
+
+    //-- SECURING API DATA
+    public authGet$(url) {
           let header = this.initAuthHeaders();
           let options = { headers: header };
           return this.http.get<any>(url, options).pipe(

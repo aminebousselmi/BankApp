@@ -1,4 +1,4 @@
-import { Component,OnInit,AfterViewInit } from '@angular/core';
+import { Component,OnInit,AfterViewInit} from '@angular/core';
 import {AuthenticateService} from '../service/authenticate.service';
 import {DashboardService} from '../service/dashboard.service';
 import {Chart} from 'chart.js';
@@ -13,7 +13,7 @@ import { AmChartsService, AmChart } from "@amcharts/amcharts3-angular";
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html'
 })
-export class DashboardComponent implements OnInit,AfterViewInit{
+export class DashboardComponent implements OnInit{
 
   //-- ATTRIBUTS
   Employe = {codePersonne : null,agence: {codeAgence:0}};
@@ -71,8 +71,7 @@ export class DashboardComponent implements OnInit,AfterViewInit{
         });
   }
   //-- END INITIALIZING FUNCTIONS
-
-  async ngAfterViewInit() {
+  /*async ngAfterViewInit() {
     await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
     await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
     await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
@@ -106,7 +105,7 @@ export class DashboardComponent implements OnInit,AfterViewInit{
       document.body.appendChild(scriptElement)
     })
   }
-
+*/
   //-- Create Detailed Chart Change
   CreateDetailedChartChange(){
     this.dashService.GetDetailedStatisticalChartByIdEmploye(this.Employe.codePersonne).subscribe(

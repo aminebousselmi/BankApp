@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { Http, Response, HttpModule } from '@angular/http';
+import { Http, Response, HttpModule} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { map, distinctUntilChanged, debounceTime, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -8,23 +8,29 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable()
-export class CompteService {
-    
+export class TaskService {
     private tokeyKey = "token";
-    constructor(private http: HttpClient,private jwtHelper: JwtHelper){
+
+    constructor(private http: HttpClient,private jwtHelper: JwtHelper){}
+
+
+    GetListTasksByEmploye(idEmploye) {
+      return this.authGet$(`http://localhost:44365/api/GetListTasksByEmploye/`+idEmploye);
     }
 
-    getCompteByNumber(numberACC) {
-        return this.authGet$(`http://localhost:44365/api/GetCompte/`+numberACC)
+    TransitionEtat(idTask,etat) {
+        return this.authGet$(`http://localhost:44365/api/TransitionEtat/`+idTask+`/`+etat);
     }
-
-     //-- GET LIST ACCOUNT BY AGENCY
-    GetListAccountByAgency(idAgence) {
-        return this.authGet$(`http://localhost:44365/api/GetListAccountByAgency/`+idAgence);
-    }
-    //-- END GET LIST ACCOUNT BY AGENCY
 
     //-- SECURING API DATA
+    public authPost$(url: string, body: any) {
+        let headers = this.initAuthHeaders();
+        return this.http.post<any>(url, body, { headers: headers }).pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            catchError(this.handleError("authPost"))
+        )
+    }
     public authGet$(url) {
         let header = this.initAuthHeaders();
         let options = { headers: header };
@@ -54,5 +60,5 @@ export class CompteService {
             return of(result as T);
         };
     }
-    //-- END SECURING API DATA
+      //-- END SECUTING API DATA
 }

@@ -22,6 +22,7 @@ import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import { AmChartsModule } from "@amcharts/amcharts3-angular";
 import { CKEditorModule } from 'ng2-ckeditor';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import {OperationService} from './components/service/operation.service';
 import {DashboardService} from './components/service/dashboard.service';
@@ -30,6 +31,8 @@ import { ChequeService } from './components/service/cheque.service';
 import { ChangeService } from './components/service/change.service';
 import {CompteService} from './components/service/compte.service';
 import {EmailService} from './components/service/email.service';
+import {ProfileService} from './components/service/profile.service';
+import {TaskService} from './components/service/task.service';
 
 import {LoginComponent} from './components/login/login.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
@@ -47,10 +50,13 @@ import {DeletedComponent} from './components/email/deleted/deleted.component';
 import {TrashComponent} from './components/email/trash/trash.component';
 import {TrashModifiedComponent} from './components/email/tashModified/trashModified.component';
 import {DeletedModifiedComponent} from './components/email/deletedModified/deletedModified.component';
-
+import {ProfileComponent} from './components/profile/profile.component';
+import { SpinnerComponent } from './components/filter/spinner.component';
+import {ChatComponent} from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
+    SpinnerComponent,
     AppComponent,
     LoginComponent,
     DashboardComponent,
@@ -68,6 +74,8 @@ import {DeletedModifiedComponent} from './components/email/deletedModified/delet
     TrashModifiedComponent,
     DeletedModifiedComponent,
     TacheComponent,
+    ProfileComponent,
+    ChatComponent,
     DataFilterPipe
   ],
 
@@ -87,7 +95,8 @@ import {DeletedModifiedComponent} from './components/email/deletedModified/delet
     AngularFireDatabaseModule,
     AmChartsModule,
     CKEditorModule,
-    GooglePlaceModule
+    GooglePlaceModule,
+    AngularFirestoreModule
   ],
   
   providers: [
@@ -101,7 +110,9 @@ import {DeletedModifiedComponent} from './components/email/deletedModified/delet
     CompteService,
     ChequeService,
     ChangeService,
-    EmailService
+    EmailService,
+    ProfileService,
+    TaskService
   ],
   bootstrap: [AppComponent]
 })

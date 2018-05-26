@@ -1,51 +1,75 @@
-import { Component,OnInit,AfterViewInit } from '@angular/core';
+import { Component,ViewContainerRef, OnInit,AfterViewInit } from '@angular/core';
+import { ProfileService } from '../service/profile.service';
 import {AuthenticateService} from '../service/authenticate.service';
-import {EmailService} from '../service/email.service';
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Overlay } from 'ngx-modialog';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
-import * as _ from 'underscore';
-
+//import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   moduleId: module.id,
-  selector: 'email',
-  templateUrl: 'email.component.html'
+  selector: 'profile',
+  templateUrl: 'profile.component.html'
 })
-export class EmailComponent implements OnInit {
+export class ProfileComponent implements OnInit{
 
-    //-- ATTRIBUTS
-    Employe = {codePersonne : null,agence: {codeAgence:0}};
-    EmailStat = {};
+  //-- ATTRIBUTS
+  Employe : {codePersonne : null,agence: {codeAgence:0}};
+  imageURL : string = "/assets/img/amine.png";
+  fileToUpload : File = null;
+  //-- END ATTRIBUTS
 
-    //-- CONSTRUCTOR && INJECTING SERVICES 
-    constructor(
-        private authService: AuthenticateService,
-        private emailService : EmailService,
-        private spinnerService: Ng4LoadingSpinnerService,
-        private modal: Modal
-    ){
-      this.spinnerService.show();
+  //-- CONSTRUCTOR
+  constructor(
+    private profileService: ProfileService,
+    private authService : AuthenticateService,
+    private toastr: ToastsManager,
+    private vcr: ViewContainerRef,
+    private modal: Modal,
+    //private spinnerService: Ng4LoadingSpinnerService
+    
+  ) {
+    
+    this.toastr.setRootViewContainerRef(vcr);
   }
-  //-- END CONSTRUCTOR && INJECTING SERVICES 
-
+  //-- END CONSTRUCTOR
+  
   //-- METHODES
- 
 
-  //-- INITIALIZING FUNCTIONS
   ngOnInit() {
     this.authService.getUsernameInfo$().subscribe(
         res => {
           this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
-                  this.GetEmailStat();
+                  
               }
           );
-        });
-  }
-  //-- END INITIALIZING FUNCTIONS
+        });  
+}
+handleFileInput(file : FileList){
+    this.fileToUpload = file.item(0);
 
- /* async ngAfterViewInit() {
+    // Show Image Peview
+    var reader = new FileReader();
+    reader.onload = (event:any) => {
+      this.imageURL = event.target.result;
+      this.profileService.UploadImage({"IdEmplye":this.Employe.codePersonne,"ByteImage":event.target.result}).subscribe(
+        resp => {
+            console.log(resp);
+        }
+      );
+    }
+    reader.readAsDataURL(this.fileToUpload);
+}
+/*private loadScript(scriptUrl: string) {
+  return new Promise((resolve, reject) => {
+    const scriptElement = document.createElement('script')
+    scriptElement.src = scriptUrl
+    scriptElement.onload = resolve
+    document.body.appendChild(scriptElement)
+  })
+}
+async ngAfterViewInit() {
     await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
     await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
     await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
@@ -66,29 +90,14 @@ export class EmailComponent implements OnInit {
     await this.loadScript("../../../assets/js/plugins/moment.min.js");
     await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
     await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
+    await this.loadScript("../../../assets/js/plugins/dropzone/dropzone.min.js");
+    await this.loadScript("../../../assets/js/plugins/fileinput/fileinput.min.js");
+    await this.loadScript("../../../assets/js/plugins/filetree/jqueryFileTree.js");
     await this.loadScript("../../../assets/js/plugins.js");
     await this.loadScript("../../../assets/js/actions.js");
     await this.loadScript("../../../assets/js/demo_dashboard.js");
+    
 
-  }
-  private loadScript(scriptUrl: string) {
-    return new Promise((resolve, reject) => {
-      const scriptElement = document.createElement('script')
-      scriptElement.src = scriptUrl
-      scriptElement.onload = resolve
-      document.body.appendChild(scriptElement)
-    })
-  }
-*/
+  }*/
 
-  GetEmailStat(){
-    this.emailService.GetStatisticalMail(this.Employe.codePersonne).subscribe(
-      res => {
-        this.EmailStat = res;
-        this.spinnerService.hide();
-      }
-    )
-  }
-
-  //-- END METHODES
 }

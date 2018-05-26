@@ -18,6 +18,8 @@ import {TrashComponent} from './components/email/trash/trash.component';
 import {TrashModifiedComponent} from './components/email/tashModified/trashModified.component';
 import {DeletedModifiedComponent} from './components/email/deletedModified/deletedModified.component';
 import {TacheComponent} from './components/tache/tache.component';
+import {ProfileComponent} from './components/profile/profile.component';
+import {ChatComponent} from './components/chat/chat.component';
 
 const  appRoutes: Routes = [
     {
@@ -104,6 +106,16 @@ const  appRoutes: Routes = [
             {
                 path:'task',
                 component:TacheComponent,
+                canActivate: [AuthenticateService]
+            },
+            {
+                path:'profile',
+                component:ProfileComponent,
+                canActivate: [AuthenticateService]
+            },
+            {
+                path:'chat',
+                component:ChatComponent,
                 canActivate: [AuthenticateService]
             }
         ]

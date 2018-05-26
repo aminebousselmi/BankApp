@@ -1,4 +1,4 @@
-   <ng4-loading-spinner> </ng4-loading-spinner>
+<ng4-loading-spinner> </ng4-loading-spinner>
    <!-- START BREADCRUMB -->
    <ul class="breadcrumb">
         <li><a>STB</a></li>
@@ -17,7 +17,7 @@
     <div class="page-content-wrap">
         <!-- START KNOB SLIDER -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" [hidden]="MinPercentageAmountCheck == 0 && MaxPercentageAmountCheck == 0 && AveragePercentageAmountCheck == 0">
             <div class="panel panel-default">  
                     <div class="panel-heading">                                  
                             <ul class="panel-controls" style="margin-top: 2px;">
@@ -40,7 +40,7 @@
                     </div>
             </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" [hidden]="AmountMin == null && AmountMax == null && AmountAverage == null">
                     <div class="panel panel-default">  
                             <div class="panel-heading">                                    
                                     <ul class="panel-controls" style="margin-top: 2px;">
@@ -121,7 +121,7 @@
                                                 <div class="form-group">
                                                     <label class="col-md-2 control-label">Check Number</label>
                                                     <div class="col-md-10">
-                                                        <input type="number" class="form-control" [(ngModel)]="Check.NumeroC" name="Check.NumeroC"  placeholder="Check Number" id="password"/>
+                                                        <input type="number"  class="form-control" [(ngModel)]="Check.NumeroC" name="Check.NumeroC"  placeholder="Check Number" id="password"/>
                                                     </div>
                                                 </div>             
                                                 <div class="form-group">
@@ -198,7 +198,18 @@
                                                 <th>Account Information</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody *ngIf="CheckList == null">
+                                                <tr>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                     <td><strong>No Data Available</strong></td>
+                                                </tr>
+                                        </tbody>
+                                        <tbody *ngIf="CheckList != null">
                                             <tr *ngFor="let chk of mf.data">
                                                 <td><strong>{{chk.numeroC}}</strong></td>
                                                 <td><span class="label label-danger">{{chk.dateV}}</span></td>
@@ -210,7 +221,7 @@
                                             </tr>
                                         </tbody>
                                         <tfoot>
-                                            <tr class="pagination pagination-sm pull-right">
+                                            <tr class="pagination pagination-sm pull-right"  *ngIf="CheckList != null">
                                                     <mfBootstrapPaginator></mfBootstrapPaginator>        
                                             </tr>
                                         </tfoot>

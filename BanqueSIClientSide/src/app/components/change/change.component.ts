@@ -1,4 +1,4 @@
-import { Component,ViewContainerRef,OnInit,AfterViewInit } from '@angular/core';
+import { Component,ViewContainerRef,OnInit, AfterViewInit } from '@angular/core';
 import {ChangeService} from '../service/change.service';
 import {AuthenticateService} from '../service/authenticate.service';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
@@ -7,18 +7,25 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { AmChartsService, AmChart } from "@amcharts/amcharts3-angular";
 
+import { NotificationChange } from './NotificationChange';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+
 @Component({
   moduleId: module.id,
   selector: 'change',
   templateUrl: 'change.component.html'
 })
-export class  ChangeComponent implements OnInit,AfterViewInit {
+export class  ChangeComponent implements OnInit {
     //--ATTRBIUTS
-    Employe : {codePersonne : null,agence: {codeAgence:0}};
+    Employe : {codePersonne : null,username:null,agence: {codeAgence:0}};
     From = 'TND';
     To = 'EUR';
     Amount = 1;
     AmountConverted = 0;
+    notifCol: AngularFirestoreCollection<NotificationChange>;
+    notifications: Observable<NotificationChange[]>;
     dataCurrency = [
         {code:'AED', name:'United Arab Emirates Dirham'},
         {code : 'AFN', name: 'Afghan Afghani'},
@@ -209,7 +216,8 @@ export class  ChangeComponent implements OnInit,AfterViewInit {
               ExchangeRate :0,
               MontantConverted:0,
               ChangeType :0,
-              CodeEmploye:0
+              CodeEmploye:0,
+              IdAgence:0
             };
        
         ChangeTable = [];
@@ -225,47 +233,13 @@ export class  ChangeComponent implements OnInit,AfterViewInit {
       private toastr: ToastsManager,
       private spinnerService: Ng4LoadingSpinnerService,
       private vcr: ViewContainerRef,
-      private AmCh: AmChartsService
+      private AmCh: AmChartsService,
+      private afs: AngularFirestore
   ) { 
     this.toastr.setRootViewContainerRef(vcr);
     this.spinnerService.show();
   }
   //-- END CONSTRUCTOR
-
-  async ngAfterViewInit() {
-    await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
-    await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
-    await this.loadScript("../../../assets/js/plugins/icheck/icheck.min.js");
-    await this.loadScript("../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
-    await this.loadScript("../../../assets/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js");
-    await this.loadScript("../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
-    await this.loadScript("../../../assets/js/plugins/rickshaw/d3.v3.js");
-    await this.loadScript("../../../assets/js/plugins/rickshaw/rickshaw.min.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-timepicker.min.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-colorpicker.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-file-input.js");
-    await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-select.js");
-    await this.loadScript("../../../assets/js/plugins/tagsinput/jquery.tagsinput.min.js");
-    await this.loadScript("../../../assets/js/plugins/owl/owl.carousel.min.js");
-    await this.loadScript("../../../assets/js/plugins/knob/jquery.knob.min.js");
-    await this.loadScript("../../../assets/js/plugins/moment.min.js");
-    await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
-    await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
-    await this.loadScript("../../../assets/js/plugins.js");
-    await this.loadScript("../../../assets/js/actions.js");
-    await this.loadScript("../../../assets/js/demo_dashboard.js");
-
-  }
-  private loadScript(scriptUrl: string) {
-    return new Promise((resolve, reject) => {
-      const scriptElement = document.createElement('script')
-      scriptElement.src = scriptUrl
-      scriptElement.onload = resolve
-      document.body.appendChild(scriptElement)
-    })
-  }
   
       //-- INITIALIZING EMPLOYE DATA
       ngOnInit() {
@@ -275,12 +249,46 @@ export class  ChangeComponent implements OnInit,AfterViewInit {
                   resp => {
                       this.Employe = resp;
                       this.GetListChange();    
-                      this.getCurrencyGraph();  
+                      this.getCurrencyGraph();
                   }
               );
         });
       }
     //-- END INITIALIZING EMPLOYE DATA
+    /*async ngAfterViewInit() {
+      await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
+      await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
+      await this.loadScript("../../../assets/js/plugins/icheck/icheck.min.js");
+      await this.loadScript("../../../assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js");
+      await this.loadScript("../../../assets/js/plugins/smartwizard/jquery.smartWizard-2.0.min.js");
+      await this.loadScript("../../../assets/js/plugins/scrolltotop/scrolltopcontrol.js");
+      await this.loadScript("../../../assets/js/plugins/rickshaw/d3.v3.js");
+      await this.loadScript("../../../assets/js/plugins/rickshaw/rickshaw.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-datepicker.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-timepicker.min.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-colorpicker.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-file-input.js");
+      await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap-select.js");
+      await this.loadScript("../../../assets/js/plugins/tagsinput/jquery.tagsinput.min.js");
+      await this.loadScript("../../../assets/js/plugins/owl/owl.carousel.min.js");
+      await this.loadScript("../../../assets/js/plugins/knob/jquery.knob.min.js");
+      await this.loadScript("../../../assets/js/plugins/moment.min.js");
+      await this.loadScript("../../../assets/js/plugins/daterangepicker/daterangepicker.js");
+      await this.loadScript("../../../assets/js/plugins/summernote/summernote.js");
+      await this.loadScript("../../../assets/js/plugins.js");
+      await this.loadScript("../../../assets/js/actions.js");
+      await this.loadScript("../../../assets/js/demo_dashboard.js");
+  
+    }
+    private loadScript(scriptUrl: string) {
+      return new Promise((resolve, reject) => {
+        const scriptElement = document.createElement('script')
+        scriptElement.src = scriptUrl
+        scriptElement.onload = resolve
+        document.body.appendChild(scriptElement)
+      })
+    }*/
 
     //-- NG CHANGE CHECKBOX
     SelectedTypeChangeFunction(){
@@ -306,6 +314,7 @@ export class  ChangeComponent implements OnInit,AfterViewInit {
       .open().result.then((dialog: any) => 
       {
           this.Change.CodeEmploye = this.Employe.codePersonne;
+          this.Change.IdAgence = this.Employe.agence.codeAgence;
           this.chService.AddDeviseOperation(this.Change).subscribe(
               data => {
                   if(data.idChange == 0){
@@ -313,6 +322,12 @@ export class  ChangeComponent implements OnInit,AfterViewInit {
                   }else{
                     this.showValid(data.messageResult);
                     this.GetListChange();
+                    
+                 //-- PUSHING DATA INTO FIREBASE
+                 var dateN = new Date(); 
+                 var dateString = dateN.getUTCHours()+':'+dateN.getUTCMinutes()+':'+dateN.getUTCSeconds();
+                 this.afs.collection('notification').add({'typeChange':this.Change.ChangeType,'nomUtilisateur':this.Employe.username,'montant':this.Change.Montant,'montantConvertie':this.Change.MontantConverted,'fromCurrCode':this.Change.FromCurrencyCode,'toCurrCode':this.Change.ToCurrencyCode,'typeOperation':'Change','typeNotification' : 'EMPLOYE', 'idAgence': this.Employe.agence.codeAgence,'date':dateString});
+                 //-- END PUSHING DATA INTO FIREBASE
                   }
               }
           )

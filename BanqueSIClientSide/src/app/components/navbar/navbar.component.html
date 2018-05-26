@@ -11,45 +11,45 @@
            </li>
            <li class="xn-profile">
                <a  class="profile-mini">
-                   <img src="../../assets/img/amine.png" alt="John Doe"/>
+                   <img src="../../assets/img/amine.png" />
                </a>
                <div class="profile">
                    <div class="profile-image">
-                       <img src="../../assets/img/amine.png" alt="John Doe"/>
+                       <img src="../../assets/img/amine.png" />
                    </div>
                    <div class="profile-data">
                        <div class="profile-data-name" *ngIf="Employe?.nomPersonne != null">{{Employe?.nomPersonne}}</div>
                        
                    </div>
                    <div class="profile-controls">
-                       <a  class="profile-control-left"><span class="fa fa-info"></span></a>
-                       <a  [routerLink]="['email/inbox']"  class="profile-control-right"><span class="fa fa-envelope"></span></a>
+                       <!--<a  [routerLink]="['profile']" (click)="reloadRoute()" class="profile-control-left"><span class="fa fa-info"></span></a>-->
+                       <a  [routerLink]="['email/inbox']" (click)="reloadRoute()"  class="profile-control-right"><span class="fa fa-envelope"></span></a>
                    </div>
                </div>                                                                        
            </li>
    
            <li class="xn-title">Home</li>
            <li>
-               <a [routerLink]="['dashboard']" ><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
+               <a [routerLink]="['dashboard']" (click)="reloadRoute()" ><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
            </li>
    
            <li class="xn-title">Operations</li>
            <li>
-               <a [routerLink]="['operation']" ><span class="fa fa-cogs"></span> <span class="xn-text">Normal Operation</span></a>
+               <a [routerLink]="['operation']" (click)="reloadRoute()" ><span class="fa fa-cogs"></span> <span class="xn-text">Normal Operation</span></a>
            </li>                    
            <li>
-               <a [routerLink]="['cheque']" ><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
+               <a [routerLink]="['cheque']" (click)="reloadRoute()" ><span class="fa fa-pencil"></span> <span class="xn-text">Payment Check</span></a>
            </li>
            <li>
-               <a [routerLink]="['change']" ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Currency</span></a>
+               <a [routerLink]="['change']" (click)="reloadRoute()" ><span class="fa fa-cogs"></span> <span class="xn-text">BUY/SALE Currency</span></a>
            </li>
    
            <li class="xn-title">Additional Services</li>
            <li>
-            <a [routerLink]="['email/inbox']"><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service</span><div class="informer informer-warning">{{EmailStat.countReaden}}</div></a>                        
+            <a [routerLink]="['email/inbox']" (click)="reloadRoute()"><span class="fa fa-envelope-o"></span> <span class="xn-text">E-Mail Service</span><div class="informer informer-warning">{{EmailStat.countReaden}}</div></a>                        
            </li>
            <li>
-               <a [routerLink]="['task']" ><span class="fa fa-table"></span> <span class="xn-text">Daily Task</span></a>                        
+               <a [routerLink]="['task']" (click)="reloadRoute()"><span class="fa fa-table"></span> <span class="xn-text">Task</span></a>                        
            </li>
            <li>
                 <a><span class="xn-text"></span></a>                        
@@ -84,65 +84,36 @@
                <!-- END SIGN OUT -->
                <!-- MESSAGES -->
                <li class="xn-icon-button pull-right">
-                   <a ><span class="fa fa-comments"></span></a>
-                   <div class="informer informer-danger">4</div>
-                   <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging">
-                       <div class="panel-heading">
-                           <h3 class="panel-title"><span class="fa fa-comments"></span> Messages</h3>                                
-                           <div class="pull-right">
-                               <span class="label label-danger">4 new</span>
-                           </div>
-                       </div>
-                       <div class="panel-body list-group list-group-contacts scroll" style="height: 200px;">
-                           <a class="list-group-item">
-                               <div class="list-group-status status-online"></div>
-                               <img src="../../assets/images/users/user2.jpg" class="pull-left"/>
-                               <span class="contacts-title">John Doe</span>
-                               <p>Praesent placerat tellus id augue condimentum</p>
-                           </a>
-                       </div>     
-                       <div class="panel-footer text-center">
-                           <a>Show all messages</a>
-                       </div>                            
-                   </div>                        
+                   <a [routerLink]="['chat']" (click)="reloadRoute()"  ><span class="fa fa-comments"></span></a>
+                   <div class="informer informer-danger">{{nbrMsgs}}</div>            
                </li>
                <!-- END MESSAGES -->
                <!-- TASKS -->
                <li class="xn-icon-button pull-right">
                    <a><span class="fa fa-tasks"></span></a>
-                   <div class="informer informer-warning">3</div>
+                   <div class="informer informer-warning">{{nbrNotif}}</div>
                    <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging">
                        <div class="panel-heading">
                            <h3 class="panel-title"><span class="fa fa-tasks"></span> Notifications</h3>                                
-                           <div class="pull-right">
+                           <!--<div class="pull-right">
                                <span class="label label-warning">3</span>
-                           </div>
+                           </div>-->
                        </div>
-                       <div class="panel-body list-group scroll" style="height: 200px;">                                
-                           <a class="list-group-item">
-                               <strong>Phasellus augue arcu, elementum</strong>
-                               <div class="progress progress-small progress-striped active">
-                                   <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
-                               </div>
-                               <small class="text-muted">John Doe, 25 Sep 2014 / 50%</small>
-                           </a>
-                           <a class="list-group-item">
-                               <strong>Aenean ac cursus</strong>
-                               <div class="progress progress-small progress-striped active">
-                                   <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">80%</div>
-                               </div>
-                               <small class="text-muted">Dmitry Ivaniuk, 24 Sep 2014 / 80%</small>
+                       <div class="panel-body list-group scroll" style="height: 200px;">
+                           <a class="list-group-item" *ngFor="let task of notifications | async">
+                               <strong>{{task.msg}}</strong><br>
+                               <small class="text-muted">{{task.date}}</small>
                            </a>                               
                        </div>     
                        <div class="panel-footer text-center">
-                           <a>Show all tasks</a>
                        </div>                            
                    </div>                        
                </li>
                <!-- END TASKS -->
            </ul>
            <!-- END X-NAVIGATION VERTICAL -->
-           <router-outlet></router-outlet>   
+           <router-outlet>
+           </router-outlet>   
    
        </div>  
              

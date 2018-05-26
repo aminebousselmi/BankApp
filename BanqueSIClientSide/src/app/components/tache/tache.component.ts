@@ -1,23 +1,35 @@
 import { Component,OnInit,AfterViewInit} from '@angular/core';
 import {Router,NavigationEnd} from '@angular/router';
 import {AuthenticateService} from '../service/authenticate.service';
+import {TaskService} from '../service/task.service';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import {AngularFireDatabase} from 'angularfire2/database';
+
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 @Component({
   moduleId: module.id,
   selector: 'task',
   templateUrl: 'tache.component.html'
 })
-export class TacheComponent implements OnInit,AfterViewInit {
+export class TacheComponent implements OnInit {
 
   //--ATTRIBUTS
-  Employe = {codePersonne : null,agence: {codeAgence:0}};
+  Employe = {codePersonne : null,username:null,agence: {codeAgence:0}};
+  ListTasks = [];
   //-- END ATTRIBUTS
 
   //-- CONSTRUCTOR && INJECTING SERVICES 
   constructor (private authService: AuthenticateService,
-               private router: Router
+               private tskServide : TaskService,
+               private router: Router,
+               private spinnerService: Ng4LoadingSpinnerService,
+               private firebase:AngularFireDatabase,
+               private afs: AngularFirestore
               ){
-               
+                this.spinnerService.show();
   }
   //-- END CONSTRUCTOR && INJECTING SERVICES 
 
@@ -31,11 +43,12 @@ export class TacheComponent implements OnInit,AfterViewInit {
           this.authService.getUserInfo$(res.data.userName).subscribe(
               resp => {
                   this.Employe = resp;
+                  this. GetListTasks();
               }
           );
         });
   }
-  async ngAfterViewInit() {
+  /*async ngAfterViewInit() {
     await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
     await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
     await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
@@ -68,11 +81,30 @@ export class TacheComponent implements OnInit,AfterViewInit {
       scriptElement.onload = resolve
       document.body.appendChild(scriptElement)
     })
-  }
+  }*/
   //-- END INITIALIZING EMPLOYE DATA
 
-  BackDash(){
-    this.router.navigate(['stb/dashboard']);
+  GetListTasks(){
+     this.tskServide.GetListTasksByEmploye(this.Employe.codePersonne).subscribe(
+              resp => {
+                  this.ListTasks = resp;
+                  this.spinnerService.hide();
+              }
+          );
+  }
+
+  ChangeEtat(idTask,etat){
+    this.tskServide.TransitionEtat(idTask,etat).subscribe(
+      resp => {
+          this.GetListTasks();
+          
+        //-- PUSHING DATA INTO FIREBASE
+        var dateN = new Date(); 
+        var dateString = dateN.getUTCHours()+':'+dateN.getUTCMinutes()+':'+dateN.getUTCSeconds();
+        this.afs.collection('notification').add({'taskMesssage':idTask+" : "+resp.messageResult,'nomUtilisateur':this.Employe.username,'typeOperation':"Task",'typeNotification' : 'EMPLOYE', 'idAgence': this.Employe.agence.codeAgence,'date':dateString});
+        //-- END PUSHING DATA INTO FIREBASE
+      }
+    );
   }
   //-- END METHODES
 }

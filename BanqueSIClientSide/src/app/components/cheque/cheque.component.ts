@@ -5,19 +5,24 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Modal } from 'ngx-modialog/plugins/bootstrap';
 import {AuthenticateService} from '../service/authenticate.service';
 import {Chart} from 'chart.js';
+import {AngularFireDatabase} from 'angularfire2/database';
 
+import { NotificationCheque } from './NotificationCheque';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 @Component({
   moduleId: module.id,
   selector: 'cheque',
   templateUrl: 'cheque.component.html'
 })
-export class  ChequeComponent implements OnInit,AfterViewInit {
+export class  ChequeComponent implements OnInit {
 
   //-- ATTRIBUTS
-  Employe : {codePersonne : null,agence: {codeAgence:0}};
-  Check = {BankName:null,CINProprietaire:0,CodeCompte:null,Montant:0,NomProprietaire:null,PrenomProprietaire:null,NumeroC:0,IdEmploye:0};
+  Employe : {codePersonne : null,username:null,agence: {codeAgence:0}};
+  Check = {BankName:null,CINProprietaire:0,CodeCompte:null,Montant:0,NomProprietaire:null,PrenomProprietaire:null,NumeroC:0,IdEmploye:0,IdAgence:0};
   Compte = [];
-  CheckList = [];
+  CheckList = null;
   chart = [];
   chart1 = [];
   MinPercentageAmountCheck = 0 ;
@@ -30,6 +35,8 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
   AmountMax = [];
   AmountAverage = [];
   alldates = [];
+  notifCol: AngularFirestoreCollection<NotificationCheque>;
+  notifications: Observable<NotificationCheque[]>;
   //-END ATTRIBUTS  
 
   //-- CONSTRUCTOR
@@ -39,7 +46,9 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
     private toastr: ToastsManager,
     private vcr: ViewContainerRef,
     private modal: Modal,
-    private authService: AuthenticateService
+    private authService: AuthenticateService,
+    private firebase:AngularFireDatabase,
+    private afs: AngularFirestore
   ) {
     this.toastr.setRootViewContainerRef(vcr);
     this.spinnerService.show();
@@ -63,8 +72,7 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
             );
           });
     }
-
-    async ngAfterViewInit() {
+   /* async ngAfterViewInit() {
       await this.loadScript('../../../assets/js/plugins/jquery/jquery.min.js');
       await this.loadScript("../../../assets/js/plugins/jquery/jquery-ui.min.js");
       await this.loadScript("../../../assets/js/plugins/bootstrap/bootstrap.min.js");
@@ -97,9 +105,7 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
         scriptElement.onload = resolve
         document.body.appendChild(scriptElement)
       })
-    }
-  //-- END INITIALIZING EMPLOYE DATA
-  
+    }*/
   //-- GET LIST ACCOUNT BY AGENCY
   GetListAccountByAgency() {
     return this.checkService.GetListAccountByAgency(this.Employe.agence.codeAgence).subscribe(
@@ -114,7 +120,11 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
   GetListCheckByPerson() {
     return this.checkService.GetListCheckByPerson(this.Employe.codePersonne).subscribe(
       data => {
-          this.CheckList = data;
+          if(data.length == 0){
+            this.CheckList = null;  
+          }else{
+            this.CheckList = data;
+          }
           this.spinnerService.hide();
       }
     );
@@ -135,6 +145,7 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
     .open().result.then((dialog: any) => 
     {
         this.Check.IdEmploye = this.Employe.codePersonne; 
+        this.Check.IdAgence = this.Employe.agence.codeAgence; 
         this.checkService.VersementCheque(this.Check).subscribe(
             data => {
 
@@ -142,6 +153,16 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
                   this.showError(data.messageResult);
                 }else{
                   this.showValid(data.messageResult);
+                  this.GetListAccountByAgency();
+                  this.GetStatisticalCheckChart();
+                  this.GetStatisticalCheckChartAmount();
+                  this.GetListCheckByPerson();  
+
+                //-- PUSHING DATA INTO FIREBASE
+                 var dateN = new Date(); 
+                 var dateString = dateN.getUTCHours()+':'+dateN.getUTCMinutes()+':'+dateN.getUTCSeconds();
+                 this.afs.collection('notification').add({'codeCompte':this.Check.CodeCompte,'nomUtilisateur':this.Employe.username,'montant': this.Check.Montant,'typeOperation':"PaymentCheck",'typeNotification' : 'EMPLOYE', 'idAgence': this.Employe.agence.codeAgence,'date':dateString});
+                 //-- END PUSHING DATA INTO FIREBASE
                 }
             }
         )
@@ -152,13 +173,16 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
   }
   //-- END Payment Operation Form Submitting
 
+  
+
   GetStatisticalCheckChart(){
     this.checkService.GetStatisticalCheckChart(this.Employe.codePersonne).subscribe(
       data => {
         this.MinPercentageAmountCheck = data.minPercentageAmountCheck;
         this.MaxPercentageAmountCheck = data.maxPercentageAmountCheck;
         this.AveragePercentageAmountCheck = data.averagePercentageAmountCheck;
-
+        
+      
         this.chart = new Chart('canvas', {
           type: 'doughnut',
           data: {
@@ -263,6 +287,18 @@ export class  ChequeComponent implements OnInit,AfterViewInit {
         for(l = 0 ; l < this.dateAmountAverage.length ; l++){
             this.alldates.push(this.dateAmountAverage[l].dateVersement);
             this.AmountAverage.push(this.dateAmountAverage[l].montant);
+        }
+
+        if(this.AmountMin.length == 0){
+          this.AmountMin = null;
+        }
+
+        if(this.AmountMax.length == 0){
+          this.AmountMax = null;
+        }
+
+        if(this.AmountAverage.length == 0){
+          this.AmountAverage = null;
         }
 
         this.chart1 = new Chart('canvas1', {

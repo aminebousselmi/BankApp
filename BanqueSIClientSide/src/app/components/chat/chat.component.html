@@ -1,0 +1,52 @@
+<ng4-loading-spinner> </ng4-loading-spinner>
+   <!-- START BREADCRUMB -->
+   <ul class="breadcrumb">
+        <li><a>STB</a></li>
+        <li class="active">Chat</li>
+    </ul>
+    <!-- END BREADCRUMB -->                
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">                    
+        <h2><span class="fa fa-comments"></span> Chat</h2>
+    </div>
+    <!-- END PAGE TITLE -->        
+
+     <!-- PAGE CONTENT WRAPPER -->
+     
+    <div class="page-content-wrap">
+        
+                    <!-- START CONTENT FRAME BODY -->
+                    <div class="content-frame-body content-frame-body-left">
+                        
+                            <div  class="messages messages-img">
+                            
+                                <div class="item"  *ngFor="let allMsg of messagess | async">
+                                    <div class="image">
+                                        <img src="assets/img/amine.png" alt="User">
+                                    </div>                                
+                                    <div class="text">
+                                        <div class="heading">
+                                            <a>{{allMsg.sentBy}}</a>
+                                            <span class="date">{{allMsg.data}}</span>
+                                        </div>                                    
+                                        {{allMsg.msg}}.
+                                    </div>
+                                </div>
+                            </div>                        
+                            
+                            <div class="panel panel-default push-up-10">
+                                <div class="panel-body panel-body-search">
+                                    <div class="input-group">
+                                        
+                                        <input type="text" class="form-control" [(ngModel)]="messageContent" name="messageContent" placeholder="Your message..."/>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default" (click)="SentMessage()">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+            </div>
+                        <!-- END CONTENT FRAME BODY -->  
+    </div>

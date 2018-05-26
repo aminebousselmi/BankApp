@@ -24,6 +24,11 @@ export class AuthenticateService implements CanActivate {
         }
     }
     
+    //-- GET LIST ACCOUNT BY AGENCY
+    SetStat(idEmploye,state) {
+        return this.authGet$(`http://localhost:44365/api/SetState/`+idEmploye+'/'+state);
+    }
+    //-- END GET LIST ACCOUNT BY AGENCY
 
     public login$(userName: string, password: string) {
         let header = new HttpHeaders().set('Content-Type', 'application/json');
@@ -40,6 +45,7 @@ export class AuthenticateService implements CanActivate {
                         sessionStorage.setItem(this.tokeyKey, result.data.accessToken);
                     }
                     this.router.navigate(["stb/dashboard"]);
+                    console.log(res);
                     return result;
                 }
             ),
