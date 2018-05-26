@@ -1,0 +1,134 @@
+<!--<income-counter></income-counter>-->
+
+<div class="row">
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-info" (click)="UserControl()" style="cursor:pointer;">
+                    <h3 class="text-white box m-b-0" *ngIf="userV == false"><i class="mdi mdi-account-off"></i></h3>
+                    <h3 class="text-white box m-b-0" *ngIf="userV == true"><i class="mdi mdi-account-outline"></i></h3>
+                </div>
+                <div class="align-self-center m-l-20">
+                    <h3 class="m-b-0 text-info">User</h3>
+                    <h5 class="text-muted m-b-0">Control</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-success" (click)="NormalOperationControl()" style="cursor:pointer;">
+                    <h3 class="text-white box m-b-0" *ngIf="normalOV == true"><i class="mdi mdi-checkbox-marked-circle"></i></h3>
+                    <h3 class="text-white box m-b-0" *ngIf="normalOV == false"><i class="mdi mdi-close-circle"></i></h3>
+                </div>
+                <div class="align-self-center m-l-20">
+                    <h3 class="m-b-0 text-success">Operation</h3>
+                    <h5 class="text-muted m-b-0">Control</h5></div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-inverse"  (click)="CurrencyControl()" style="cursor:pointer;">
+                    <h3 class="text-white box m-b-0" *ngIf="currencyV == true"><i class="mdi mdi-checkbox-marked-circle"></i></h3>
+                    <h3 class="text-white box m-b-0" *ngIf="currencyV == false"><i class="mdi mdi-close-circle"></i></h3>
+                </div>
+                <div class="align-self-center m-l-20">
+                    <h3 class="m-b-0">Currency</h3>
+                    <h5 class="text-muted m-b-0">Control</h5></div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="d-flex flex-row">
+                <div class="p-10 bg-primary" (click)="CheckControl()" style="cursor:pointer;">
+                    <h3 class="text-white box m-b-0" *ngIf="checkV == true"><i class="mdi mdi-checkbox-marked-circle"></i></h3>
+                    <h3 class="text-white box m-b-0" *ngIf="checkV == false"><i class="mdi mdi-close-circle"></i></h3>
+                </div>
+                <div class="align-self-center m-l-20">
+                    <h3 class="m-b-0 text-primary">Check</h3>
+                    <h5 class="text-muted m-b-0">Control</h5></div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+<!-- Row -->
+<div class="row">
+    <div class="col-lg-8 col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                    <th>Control Access</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let emp of EmployeControl">
+                                    <td>{{emp.userName}}</td>
+                                    <td *ngIf="emp.state == true">
+                                        <div class="label label-table label-success">OnLine</div>
+                                    </td>
+                                    <td *ngIf="emp.state == false">
+                                        <div class="label label-info">OffLine</div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary btn-circle"  (click)="SetAccessUser(emp.userName)" *ngIf="emp.control == true">
+                                            <i class="fa fa-check"></i> 
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-circle" (click)="SetAccessUser(emp.userName)" *ngIf="emp.control == false">
+                                                <i class="fa fa-times"></i> 
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-5">
+        <!-- Column -->
+       <div class="card card-default">
+            <div class="card-header">
+                <h4 class="card-title m-b-0">Tasks</h4>
+            </div>
+            <div class="card-body collapse show">
+                <div style="height: 220px">
+                    <x-chartist class="" [data]="donuteChart1?.data" [type]="donuteChart1?.type" [options]="donuteChart1?.options" [responsiveOptions]="donuteChart1?.responsiveOptions" [events]="donuteChart1?.events"> </x-chartist>
+                </div>
+            </div>
+            <ul class="list-inline m-t-20 text-center">
+                <li >
+                    <h6 class="text-muted"><i class="fa fa-circle text-info"></i> TODO</h6>
+                    <h4 class="m-b-0">{{SumTask?.todoSum}}</h4>
+                </li>
+                <li>
+                    <h6 class="text-muted"><i class="fa fa-circle text-danger"></i> IN PROCESS</h6>
+                    <h4 class="m-b-0">{{SumTask?.inProcessSum}}</h4>
+                </li>
+                <li>
+                    <h6 class="text-muted"> <i class="fa fa-circle text-success"></i> DONE</h6>
+                    <h4 class="m-b-0">{{SumTask?.doneSum}}</h4>
+                </li>
+            </ul>
+        </div>
+       
+    </div>
+</div>

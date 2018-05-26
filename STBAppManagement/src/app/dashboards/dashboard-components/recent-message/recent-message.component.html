@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Recent Messages</h4>
+        <div class="message-box">
+            <div class="message-widget message-scroll">
+                <!-- Message -->
+                <a href="#" *ngFor="let recentmessage of recentmessages">
+                    <div class="user-img"> <img src="{{recentmessage.image}}" alt="user" class="img-circle"> <span class="profile-status {{recentmessage.status}} pull-right"></span> </div>
+                    <div class="mail-contnet">
+                        <h5>{{recentmessage.name}}</h5> <span class="mail-desc">{{recentmessage.message}}</span> <span class="time">{{recentmessage.time}}</span> 
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

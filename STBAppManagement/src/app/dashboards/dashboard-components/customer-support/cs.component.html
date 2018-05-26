@@ -1,0 +1,25 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Customer Support</h4>
+        <h6 class="card-subtitle">24 new support ticket request generate</h6>
+    </div>
+    <div class="comment-widgets">
+        <!-- Comment Row -->
+        <div class="d-flex flex-row comment-row" *ngFor="let recentcomment of recentcomments">
+            <div class="p-2"><span class="round"><img src="{{recentcomment.image}}" alt="user" width="50"></span></div>
+            <div class="comment-text w-100">
+                <h5>{{recentcomment.name}}</h5>
+                <p class="m-b-5">{{recentcomment.comment}}</p>
+                <div class="comment-footer">
+                    <span class="text-muted pull-right">{{recentcomment.date}}</span>
+                    <span class="label {{recentcomment.labelcolor}}">{{recentcomment.status}}</span>
+                    <span class="action-icons">
+                        <a href="javascript:void(0)"><i class="ti-pencil-alt"></i></a>
+                        <a href="javascript:void(0)"><i class="ti-check"></i></a>
+                        <a href="javascript:void(0)"><i class="ti-heart"></i></a>    
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="card earning-widget">
+    <div class="card-body">
+        <div class="card-title">
+            <h4 class="card-title m-b-0">Total Earning</h4>
+            <h2 class="m-t-0">$586</h2>
+        </div>
+    </div>
+    <div class="card-body b-t">
+        <table class="table v-middle no-border">
+            <tbody>
+                <tr *ngFor="let totalearning of totalearnings">
+                    <td style="width:40px"><img src="{{totalearning.image}}" width="50" class="img-circle" alt="logo"></td>
+                    <td>{{totalearning.name}}</td>
+                    <td class="text-right"><span class="label {{totalearning.labelcolor}}">{{totalearning.amount}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
